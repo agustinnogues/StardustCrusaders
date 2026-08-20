@@ -1,0 +1,25 @@
+.contenedorJuegos{
+    width:90%;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:35px;
+}
+.juego{
+    background:var(--card);
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 20px var(--sombra);    transition:.3s;
+    cursor:pointer;
+}
+.juego:hover{
+    transform:translateY(-10px);
+    box-shadow:0 15px 30px var(--sombra);}
+.juego img{
+    width:100%;
+    display:block;
+}
+.juego h3{
+    padding:20px;
+    text-align:center;
+}

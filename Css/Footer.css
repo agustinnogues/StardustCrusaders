@@ -1,0 +1,21 @@
+footer{
+    position:fixed;
+    left:0;
+    bottom:-80px;
+    width:100%;
+    height:70px;
+    background:var(--header);    backdrop-filter:blur(15px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:80px;
+    transition:.35s;
+    box-shadow:0 -3px 15px var(--sombra);}
+footer a{
+    text-decoration:none;
+    font-size:28px;
+}
+/* Footer visible */
+.mostrarFooter{
+    bottom:0;
+}
