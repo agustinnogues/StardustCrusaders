@@ -1,0 +1,293 @@
+@import url("Header.css");
+@import url("Footer.css");
+@import url("Inicio.css");
+@import url("Perfil.css");
+@import url("Juegos.css");
+@import url("Admin.css");
+@import url("Responsive.css");
+:root{
+    --fondo:#f3f4f6;
+    --header:#ffffffee;
+    --card:#ffffff;
+    --texto:#222;
+    --texto2:#666;
+    --azul:#4f8dfd;
+    --sombra:rgba(0,0,0,.12);
+}
+.dark{
+    --fondo:#111827;
+    --header:#1f2937ee;
+    --card:#1f2937;
+    --texto:#ffffff;
+    --texto2:#bfc8d4;
+    --azul:#60a5fa;
+    --sombra:rgba(0,0,0,.45);
+}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    background:var(--fondo);
+    color:var(--texto);
+    font-family:Segoe UI,sans-serif;
+}
+/* Variables*/
+:root{
+    --fondo:#f3f5f7;
+    --card:#ffffff;
+    --header:rgba(255,255,255,.85);
+    --texto:#222;
+    --texto2:#666;
+    --azul:#3b82f6;
+    --sombra:rgba(0,0,0,.12);
+}
+.dark{
+    --fondo:#111827;
+    --card:#1f2937;
+    --header:rgba(31,41,55,.90);
+    --texto:#ffffff;
+    --texto2:#bfc8d4;
+    --azul:#60a5fa;
+    --sombra:rgba(0,0,0,.45);
+}
+/*GENERAL*/
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+html{
+    scroll-behavior:smooth;
+}
+body{
+    background:var(--fondo);
+    color:var(--texto);
+    font-family:'Segoe UI',sans-serif;
+}
+/*HERO */
+.hero{
+    margin-top:120px;
+    text-align:center;
+    padding:80px 20px;
+}
+.hero h1{
+    font-size:50px;
+    margin-bottom:20px;
+}
+.hero p{
+    color:var(--texto2);
+    font-size:20px;
+}
+/*TITULOS*/
+.titulo{
+    width:90%;
+    margin:auto;
+    margin-top:50px;
+    margin-bottom:30px;
+}
+.titulo h2{
+    font-size:32px;
+}
+/*INFORMACION*/
+.informacion{
+    width:90%;
+    margin:80px auto;
+}
+.informacion h2{
+    margin-bottom:20px;
+}
+.informacion p{
+    color:var(--texto2);
+    line-height:1.8;
+}
+/*RESPONSIVE*/
+@media(max-width:1000px){
+    .contenedorJuegos{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+@media(max-width:700px){
+    header{
+        padding:20px;
+    }
+    nav{
+        display:none;
+    }
+    .contenedorJuegos{
+        grid-template-columns:1fr;
+    }
+    .hero h1{
+        font-size:35px;
+    }
+}
+/* PAGINAS*/
+.pagina{
+    width:90%;
+    margin:auto;
+    padding-top:120px;
+    padding-bottom:120px;
+}
+.pagina h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+.subtitulo{
+    color:var(--texto2);
+    margin-bottom:40px;
+}
+.buscador{
+    margin-bottom:40px;
+}
+.buscador input{
+    width:100%;
+    max-width:500px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:var(--card);
+    color:var(--texto);
+    box-shadow:0 5px 20px var(--sombra);
+    font-size:16px;
+}
+.gridJuegos{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+}
+.cardJuego{
+    background:var(--card);
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 20px var(--sombra);
+    transition:.3s;
+}
+.cardJuego:hover{
+    transform:translateY(-8px);
+}
+.cardJuego img{
+    width:100%;
+    display:block;
+}
+.cardJuego h3{
+    padding:20px;
+    text-align:center;
+}
+.cardJuego button{
+    width:85%;
+    margin:0 auto 20px;
+    display:block;
+    height:45px;
+    border:none;
+    border-radius:8px;
+    background:var(--azul);
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+/*MENÚ PERFIL*/
+.perfil{
+    position:relative;
+}
+.menuPerfil{
+    position:absolute;
+    top:60px;
+    right:0;
+    width:240px;
+    background:var(--card);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 10px 25px var(--sombra);
+    display:none;
+    z-index:1000;
+}
+.menuPerfil.activo{
+    display:block;
+}
+.menuPerfil a{
+    display:block;
+    padding:14px 18px;
+    color:var(--texto);
+    text-decoration:none;
+    transition:.2s;
+}
+.menuPerfil a:hover{
+    background:var(--fondo);
+}
+.menuPerfil hr{
+    border:none;
+    border-top:1px solid rgba(150,150,150,.2);
+}
+/*======================
+        NOVEDADES
+=======================*/
+.contenedorNoticias{
+display:flex;
+flex-direction:column;
+gap:40px;
+}
+.noticia{
+background:var(--card);
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 5px 20px var(--sombra);
+transition:.3s;
+}
+.noticia:hover{
+transform:translateY(-5px);
+}
+.noticia img{
+width:100%;
+display:block;
+}
+.contenidoNoticia{
+padding:25px;
+}
+.contenidoNoticia span{
+color:var(--texto2);
+}
+.contenidoNoticia h2{
+margin:15px 0;
+}
+.contenidoNoticia p{
+line-height:1.8;
+margin-bottom:20px;
+}
+.contenidoNoticia button{
+padding:12px 22px;
+border:none;
+border-radius:8px;
+background:var(--azul);
+color:white;
+cursor:pointer;
+}
+/*====================
+        NOSOTROS
+=====================*/
+.tarjetaInfo{
+background:var(--card);
+padding:30px;
+margin-bottom:30px;
+border-radius:15px;
+box-shadow:0 5px 20px var(--sombra);
+}
+.tarjetaInfo h2{
+margin-bottom:15px;
+}
+.tarjetaInfo p{
+line-height:1.8;
+}
+.tecnologias{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+margin-top:20px;
+}
+.tecnologias span{
+padding:12px 18px;
+background:var(--azul);
+color:white;
+border-radius:30px;
+font-weight:bold;
+}

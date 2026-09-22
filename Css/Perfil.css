@@ -1,0 +1,67 @@
+.perfilContainer{
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+}
+.perfilIzquierda{
+    width:280px;
+    background:var(--card);
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 20px var(--sombra);
+}
+.fotoPerfil{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:20px;
+}
+.perfilIzquierda h2{
+    margin-bottom:10px;
+}
+.admin{
+    display:inline-block;
+    margin-top:20px;
+    padding:8px 15px;
+    background:#f1c40f;
+    color:#000;
+    border-radius:25px;
+    font-weight:bold;
+}
+.perfilDerecha{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+.tarjeta{
+    background:var(--card);
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px var(--sombra);
+}
+.tarjeta h3{
+    margin-bottom:20px;
+}
+.tarjeta ul{
+    list-style:none;
+}
+.tarjeta li{
+    padding:10px 0;
+    border-bottom:1px solid rgba(120,120,120,.2);
+}
+.tarjeta table{
+    width:100%;
+    border-collapse:collapse;
+}
+.tarjeta th,
+.tarjeta td{
+    padding:12px;
+    text-align:left;
+}
+.tarjeta tr:nth-child(even){
+    background:rgba(150,150,150,.08);
+}
