@@ -1,3 +1,48 @@
+<?php
+session_start();
+require_once "Conexion.php";
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["id_usuario"])) {
+    header("Location: Login.php");
+    exit();
+}
+
+$id_usuario = $_SESSION["id_usuario"];
+$usuario = [];
+$mi_equipo = null;
+$integrantes = [];
+
+try {
+    $pdo = Conexion::conectar();
+
+    // 1. Obtener datos del usuario actual
+    $stmt = $pdo->prepare("SELECT ID_U, Nombre_Usuario, Correo_Electronico, Rol, Rango FROM USUARIO WHERE ID_U = ?");
+    $stmt->execute([$id_usuario]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 2. Obtener datos del equipo y rol del usuario (asumiendo que en la tabla INTEGRA guardas un campo 'Rol' o similar)
+    $sql_equipo = "SELECT E.ID_E, E.Nombre_Equipo, I.Rol FROM INTEGRA I 
+                   JOIN EQUIPO E ON I.ID_E = E.ID_E 
+                   WHERE I.ID_U = ?";
+    $stmt_eq = $pdo->prepare($sql_equipo);
+    $stmt_eq->execute([$id_usuario]);
+    $mi_equipo = $stmt_eq->fetch(PDO::FETCH_ASSOC);
+
+    // 3. Si pertenece a un equipo, obtener todos los integrantes
+    if ($mi_equipo) {
+        $sql_integrantes = "SELECT U.ID_U, U.Nombre_Usuario, I.Rol FROM INTEGRA I 
+                            JOIN USUARIO U ON I.ID_U = U.ID_U 
+                            WHERE I.ID_E = ?";
+        $stmt_int = $pdo->prepare($sql_integrantes);
+        $stmt_int->execute([$mi_equipo['ID_E']]);
+        $integrantes = $stmt_int->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+} catch (Exception $e) {
+    $error_db = $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,13 +54,78 @@
 <?php include("includes/header.php"); ?>
 <section class="pagina">
     <div class="perfilContainer">
+        
+        <!-- Columna Izquierda: Datos del usuario y opciones críticas -->
         <div class="perfilIzquierda">
             <img src="https://i.pravatar.cc/200" class="fotoPerfil">
-            <h2>Brahian Amaral</h2>
-            <p>ID: 0001</p>
-            <span class="admin">👑 Administrador</span>
+            <h2><?php echo htmlspecialchars($usuario['Nombre_Usuario'] ?? 'Usuario'); ?></h2>
+            <p>ID: <?php echo str_pad($usuario['ID_U'] ?? 1, 4, "0", STR_PAD_LEFT); ?></p>
+            <span class="admin">
+                <?php echo (!empty($usuario['Rol'])) ? "👑 Administrador" : "👤 Usuario Estándar"; ?>
+            </span>
+
+            <!-- Botón para borrar perfil -->
+            <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px;">
+                <form action="EliminarPerfil.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu perfil permanentemente? Esta acción no se puede deshacer.');">
+                    <button type="submit" name="eliminar_cuenta" style="background-color: #d9534f; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+                        🗑️ Borrar mi perfil
+                    </button>
+                </form>
+            </div>
         </div>
+
+        <!-- Columna Derecha: Juegos, puntuaciones y gestión de equipos -->
         <div class="perfilDerecha">
+            
+            <!-- Alerta si intenta salir del equipo siendo el único líder -->
+            <?php if (isset($_GET['error']) && $_GET['error'] == 'unico_lider'): ?>
+                <div style="background-color: #f2dede; color: #a94442; padding: 12px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ebccd1;">
+                    ⚠️ No puedes salir del equipo siendo el único líder. Debes asignar a otro líder primero o ceder el puesto.
+                </div>
+            <?php endif; ?>
+
+            <!-- NUEVA TARJETA: Mi Equipo -->
+            <div class="tarjeta">
+                <h3>🛡️ Mi Equipo</h3>
+                
+                <?php if ($mi_equipo): ?>
+                    <p><strong>Nombre del Equipo:</strong> <?php echo htmlspecialchars($mi_equipo['Nombre_Equipo']); ?></p>
+                    <p><strong>Tu Rol:</strong> <?php echo htmlspecialchars($mi_equipo['Rol']); ?></p>
+                    
+                    <h4 style="margin-top: 15px;">Integrantes:</h4>
+                    <ul>
+                        <?php foreach ($integrantes as $integ): ?>
+                            <li style="margin-bottom: 8px;">
+                                <?php echo htmlspecialchars($integ['Nombre_Usuario']); ?> (<?php echo htmlspecialchars($integ['Rol']); ?>)
+                                
+                                <!-- Si el usuario actual es líder y el integrante listado no es él mismo, mostrar botón Echar -->
+                                <?php if ($mi_equipo['Rol'] == 'lider' && $integ['ID_U'] != $id_usuario): ?>
+                                    <form action="EcharMiembro.php" method="POST" style="display:inline;">
+                                        <input type="hidden" name="id_miembro" value="<?php echo $integ['ID_U']; ?>">
+                                        <button type="submit" onclick="return confirm('¿Estás seguro de expulsar a este integrante?');" style="background: #d9534f; color: white; border: none; padding: 2px 6px; cursor: pointer; float: right; border-radius: 3px;">
+                                            Echar
+                                        </button>
+                                    </form>
+                                <?php elseif ($integ['ID_U'] == $id_usuario && $mi_equipo['Rol'] == 'lider'): ?>
+                                    <button style="background: #ccc; color: white; border: none; padding: 2px 6px; cursor: pointer; float: right; border-radius: 3px;" disabled>Echar</button>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+
+                    <div style="margin-top: 20px;">
+                        <!-- Botón para salir del equipo (validando si es el único líder) -->
+                        <form action="SalirEquipo.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas salir del equipo?');">
+                            <button type="submit" style="background-color: #f0ad4e; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px;">
+                                Salir del equipo
+                            </button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <p>Actualmente no formas parte de ningún equipo.</p>
+                <?php endif; ?>
+            </div>
+
             <div class="tarjeta">
                 <h3>🎮 Juegos recientes</h3>
                 <ul>
@@ -25,6 +135,7 @@
                     <li>Tetris</li>
                 </ul>
             </div>
+            
             <div class="tarjeta">
                 <h3>🏆 Puntuaciones</h3>
                 <table>
