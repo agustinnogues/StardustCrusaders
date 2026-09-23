@@ -19,11 +19,22 @@
             <a href="#">Configuración</a>
             <a href="#">Mis estadísticas</a>
             <a href="#">Mis juegos</a>
+               <hr>
+               <?php if (isset($_SESSION["rol"]) && $_SESSION["rol"] == 1): ?>
+                    <a href="Admin/Admin.php">Panel Admin</a>
+                <?php endif; ?>
+                <?php if (isset($_SESSION["rango"]) && $_SESSION["rango"] == 1): ?>
+                     <a href="equipo.php">Panel Equipo</a>
+                <?php endif; ?>
+                <?php if (
+                    (isset($_SESSION["rol"]) && $_SESSION["rol"] == 1) ||
+                    (isset($_SESSION["rango"]) && $_SESSION["rango"] == 1)
+                ): ?>
+                <hr>
+                <?php endif; ?>
             <hr>
-            <!-- Mostrar solo si es administrador -->
-            <a href="admin.php">Panel Admin</a>
+                <a href="Logout.php">Cerrar sesión</a>
             <hr>
-            <a href="#">Cerrar sesión</a>
         </div>
     </div> 
 </header>
