@@ -1,3 +1,48 @@
+<?php
+session_start();
+require_once "Conexion.php";
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["id_usuario"])) {
+    header("Location: Login.php");
+    exit();
+}
+
+$id_usuario = $_SESSION["id_usuario"];
+$usuario = [];
+$mi_equipo = null;
+$integrantes = [];
+
+try {
+    $pdo = Conexion::conectar();
+
+    // 1. Obtener datos del usuario actual
+    $stmt = $pdo->prepare("SELECT ID_U, Nombre_Usuario, Correo_Electronico, Rol, Rango FROM USUARIO WHERE ID_U = ?");
+    $stmt->execute([$id_usuario]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 2. Obtener datos del equipo y rol del usuario
+    $sql_equipo = "SELECT E.ID_E, E.Nombre_Equipo, I.Rol FROM INTEGRA I 
+                   JOIN EQUIPO E ON I.ID_E = E.ID_E 
+                   WHERE I.ID_U = ?";
+    $stmt_eq = $pdo->prepare($sql_equipo);
+    $stmt_eq->execute([$id_usuario]);
+    $mi_equipo = $stmt_eq->fetch(PDO::FETCH_ASSOC);
+
+    // 3. Si pertenece a un equipo, obtener todos los integrantes
+    if ($mi_equipo) {
+        $sql_integrantes = "SELECT U.ID_U, U.Nombre_Usuario, I.Rol FROM INTEGRA I 
+                            JOIN USUARIO U ON I.ID_U = U.ID_U 
+                            WHERE I.ID_E = ?";
+        $stmt_int = $pdo->prepare($sql_integrantes);
+        $stmt_int->execute([$mi_equipo['ID_E']]);
+        $integrantes = $stmt_int->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+} catch (Exception $e) {
+    $error_db = $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,9 +56,20 @@
     <div class="perfilContainer">
         <div class="perfilIzquierda">
             <img src="https://i.pravatar.cc/200" class="fotoPerfil">
-            <h2>Brahian Amaral</h2>
-            <p>ID: 0001</p>
-            <span class="admin">👑 Administrador</span>
+            <h2><?php echo htmlspecialchars($usuario['Nombre_Usuario'] ?? 'Brahian Amaral'); ?></h2>
+            <p>ID: <?php echo str_pad($usuario['ID_U'] ?? 1, 4, "0", STR_PAD_LEFT); ?></p>
+            <span class="admin">
+                <?php echo (!empty($usuario['Rol'])) ? "👑 Administrador" : "👤 Usuario Estándar"; ?>
+            </span>
+
+            <!-- Botón para borrar perfil -->
+            <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px;">
+                <form action="EliminarPerfil.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu perfil permanentemente? Esta acción no se puede deshacer.');">
+                    <button type="submit" name="eliminar_cuenta" style="background-color: #d9534f; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+                        🗑️ Borrar mi perfil
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Columna Derecha: Juegos, puntuaciones y gestión de equipos -->
