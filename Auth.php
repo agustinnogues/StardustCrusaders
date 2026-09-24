@@ -2,14 +2,14 @@
 session_start();
 require_once "Conexion.php";
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: login.php");
+    header("Location: Login.php");
     exit;
 }
 $usuario = $_POST["usuario"] ?? "";
 $password = $_POST["password"] ?? "";
 try {
     $pdo = Conexion::conectar();
-    $sql = "SELECT ID_U, Nombre_Usuario, Correo_Electronico, Contrasena
+    $sql = "SELECT ID_U, Nombre_Usuario, Correo_Electronico, Contrasena, Rol, Rango
             FROM USUARIO
             WHERE Nombre_Usuario = :usuario
             AND Contrasena = :password";
@@ -23,6 +23,8 @@ try {
         $_SESSION["id_usuario"] = $usuarioBD["ID_U"];
         $_SESSION["nombre_usuario"] = $usuarioBD["Nombre_Usuario"];
         $_SESSION["correo"] = $usuarioBD["Correo_Electronico"];
+        $_SESSION["Rol"] = $usuarioBD["Rol"];
+        $_SESSION["Rango"] = $usuarioBD["Rango"];
         header("Location: Index.php");
         exit;
     } else {
