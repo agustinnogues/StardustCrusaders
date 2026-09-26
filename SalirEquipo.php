@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = Conexion::conectar();
         $pdo->beginTransaction();
 
-        // 1. Obtener datos del usuario (incluyendo su Rango/Líder) y su equipo actual
+        // 1. Obtener datos del usuario (su Rango) y su equipo actual
         $stmt_user = $pdo->prepare("SELECT Rango FROM USUARIO WHERE ID_U = ?");
         $stmt_user->execute([$id_usuario]);
         $user_data = $stmt_user->fetch(PDO::FETCH_ASSOC);
@@ -24,31 +24,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $integracion = $stmt_integra->fetch(PDO::FETCH_ASSOC);
 
         if (!$integracion) {
+            $pdo->rollBack();
             header("Location: Perfil.php");
             exit();
         }
 
         $id_equipo = $integracion['ID_E'];
-        $es_lider = ($user_data['Rango'] == 1); // 1 significa que es el líder
+        $es_lider = (isset($user_data['Rango']) && (int)$user_data['Rango'] === 1);
 
-        // 2. Si es líder, verificar si hay más integrantes en el equipo
-        if ($es_lider) {
-            $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM INTEGRA WHERE ID_E = ?");
-            $stmt_count->execute([$id_equipo]);
-            $total_miembros = $stmt_count->fetchColumn();
+        // 2. Contar cuántos miembros hay en total en ese equipo
+        $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM INTEGRA WHERE ID_E = ?");
+        $stmt_count->execute([$id_equipo]);
+        $total_miembros = (int)$stmt_count->fetchColumn();
 
-            // Si hay más miembros además del líder, no puede salir así nada más
-            if ($total_miembros > 1) {
-                header("Location: Perfil.php?error=lider_con_miembros");
-                exit();
-            }
+        // 3. REGLA ESTRICTA: Si es líder Y es el único miembro en el equipo (total_miembros <= 1), 
+        // ¡NO LO DEJES SALIR! Para evitar que el equipo quede vacío u huérfano.
+        if ($es_lider && $total_miembros <= 1) {
+            $pdo->rollBack();
+            header("Location: Perfil.php?error=lider_con_miembros"); // O puedes usar otro mensaje si prefieres
+            exit();
         }
 
-        // 3. Eliminar al usuario de la tabla INTEGRA
-        $stmt_del = $pdo->prepare("DELETE FROM INTEGRA WHERE ID_U = ?");
-        $stmt_del->execute([$id_usuario]);
+        // 4. Si hay más gente en el equipo, el líder sí puede irse (pero antes de irse, 
+        // idealmente deberías asegurar que otro asuma el liderazgo, o simplemente lo saca a él de INTEGRA).
+        $stmt_del = $pdo->prepare("DELETE FROM INTEGRA WHERE ID_U = ? AND ID_E = ?");
+        $stmt_del->execute([$id_usuario, $id_equipo]);
 
-        // 4. Si era líder, devolver su Rango a 0 (usuario normal)
+        // 5. Devolver su Rango a 0 (usuario normal) ya que dejó el equipo/liderazgo
         if ($es_lider) {
             $stmt_upd = $pdo->prepare("UPDATE USUARIO SET Rango = 0 WHERE ID_U = ?");
             $stmt_upd->execute([$id_usuario]);
