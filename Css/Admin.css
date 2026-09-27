@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Panel de Administración - Stardust Crusaders
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/estilos.css"
+    >
+
+    <style>
+
+        .adminContainer {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .adminContainer h1 {
+            margin-bottom: 10px;
+        }
+
+        .adminDescripcion {
+            margin-bottom: 30px;
+        }
+
+        .mensajeExito {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .mensajeError {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tablaAdmin {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .tablaAdmin th,
+        .tablaAdmin td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .tablaAdmin th {
+            font-weight: bold;
+        }
+
+        .botonAdmin {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .botonRol {
+            background: #ffc107;
+        }
+
+        .botonEliminar {
+            background: #dc3545;
+            color: white;
+        }
+
+        .rolAdmin {
+            font-weight: bold;
+        }
+
+        .rolJugador {
+            font-weight: normal;
+        }
+
+        .tarjetaAdmin {
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            background: var(--card);
+            color: var(--texto);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .dark .mensajeExito {
+            background: #1e4620;
+            color: #d4edda;
+        }
+
+        .dark .mensajeError {
+            background: #5a1f24;
+            color: #f8d7da;
+        }
+
+        .dark .tablaAdmin th,
+        .dark .tablaAdmin td {
+            border-color: #444;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<?php include("../includes/Header.php"); ?>
+<section class="pagina">
+
+    <div class="adminContainer">
+
+        <h1>
+            Panel de Administración
+        </h1>
+
+        <p class="adminDescripcion">
+            Desde este panel podés administrar los usuarios de
+            Stardust Crusaders.
+        </p>
+
+
+        <!-- MENSAJE DE ÉXITO -->
+
+        <?php if ($mensaje != ""): ?>
+
+            <div class="mensajeExito">
+
+                <?= htmlspecialchars($mensaje) ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <!-- MENSAJE DE ERROR -->
+
+        <?php if ($error != ""): ?>
+
+            <div class="mensajeError">
+
+                <?= htmlspecialchars($error) ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <!-- USUARIOS -->
+
+        <div class="tarjetaAdmin">
+
+            <h2>
+                Usuarios registrados
+            </h2>
+
+            <table class="tablaAdmin">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Usuario</th>
+
+                        <th>Correo</th>
+
+                        <th>Rol</th>
+
+                        <th>Rango</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <?php foreach ($usuarios as $usuario): ?>
+
+                    <tr>
+
+                        <!-- ID -->
+
+                        <td>
+
+                            <?= htmlspecialchars(
+                                $usuario["ID_U"]
+                            ) ?>
+
+                        </td>
+
+
+                        <!-- USUARIO -->
+
+                        <td>
+
+                            <?= htmlspecialchars(
+                                $usuario["Nombre_Usuario"]
+                            ) ?>
+
+                        </td>
+
+
+                        <!-- CORREO -->
+
+                        <td>
+
+                            <?= htmlspecialchars(
+                                $usuario["Correo_Electronico"]
+                            ) ?>
+
+                        </td>
+
+
+                        <!-- ROL -->
+
+                        <td>
+
+                            <?php if ($usuario["Rol"] == 1): ?>
+
+                                <span class="rolAdmin">
+                                    Administrador
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="rolJugador">
+                                    Jugador
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <!-- RANGO -->
+
+                        <td>
+
+                            <?php if ($usuario["Rango"] == 1): ?>
+
+                                Lider
+
+                            <?php else: ?>
+
+                                Jugador
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <!-- ACCIONES -->
+
+                        <td>
+
+                            <?php if (
+                                $usuario["ID_U"] != $idAdministrador
+                            ): ?>
+
+
+                                <!-- CAMBIAR ROL -->
+
+                                <form
+                                    method="POST"
+                                    style="display:inline;"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="id_usuario"
+                                        value="<?= $usuario["ID_U"] ?>"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        name="cambiar_rol"
+                                        class="botonAdmin botonRol"
+                                    >
+
+                                        <?php if (
+                                            $usuario["Rol"] == 1
+                                        ): ?>
+
+                                            Quitar Admin
+
+                                        <?php else: ?>
+
+                                            Hacer Admin
+
+                                        <?php endif; ?>
+
+                                    </button>
+
+                                </form>
+
+
+                                <!-- ELIMINAR -->
+
+                                <form
+                                    method="POST"
+                                    style="display:inline;"
+                                    onsubmit="
+                                        return confirm(
+                                            '¿Seguro que querés eliminar este usuario?'
+                                        );
+                                    "
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="id_usuario"
+                                        value="<?= $usuario["ID_U"] ?>"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        name="eliminar_usuario"
+                                        class="botonAdmin botonEliminar"
+                                    >
+
+                                        Eliminar
+
+                                    </button>
+
+                                </form>
+
+
+                            <?php else: ?>
+
+                                <strong>
+                                    Vos
+                                </strong>
+
+                            <?php endif; ?>
+
+                        </td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- INFORMACIÓN -->
+
+        <div class="tarjetaAdmin">
+
+            <h2>
+                ℹ️ Información
+            </h2>
+
+            <p>
+                Los administradores pueden cambiar los permisos
+                de los usuarios y eliminar cuentas.
+            </p>
+
+            <p>
+                Las modificaciones de permisos quedan registradas
+                en la tabla <strong>ADMIN_U</strong>.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<?php include("../includes/footer.php"); ?>
+
+
+<script src="../Js/scripts.js"></script>
+
+</body>
+
+</html>

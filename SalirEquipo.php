@@ -1,14 +1,11 @@
 <?php
 session_start();
 require_once "Conexion.php";
-
 if (!isset($_SESSION["id_usuario"])) {
     header("Location: Login.php");
     exit();
 }
-
 $id_usuario = $_SESSION["id_usuario"];
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $pdo = Conexion::conectar();
