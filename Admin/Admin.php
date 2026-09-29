@@ -74,7 +74,7 @@ include "../includes/Header.php";
             class="adminTab
             <?= $tab === "agregar" ? "activa" : "" ?>"
         >
-            ➕ Agregar juego
+            Agregar juego
         </a>
     </div>
     <!-- Contenidos -->
