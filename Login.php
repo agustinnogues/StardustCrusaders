@@ -52,6 +52,12 @@ require_once "Instalar.php";
                                     required
                                 >
                             </div>
+                            
+                            <!-- ENLACE ¿OLVIDASTE TU CONTRASEÑA? NUEVO -->
+                            <div class="mb-3 text-end">
+                                <a href="recuperarPassword/OlvidePassword.php" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
+                            </div>
+
                             <!-- BOTÓN -->
                             <button
                                 type="submit"
