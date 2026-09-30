@@ -236,11 +236,12 @@ try {
     // INSERTAR JUEGO
     $insertarJuego = $conexion->prepare(
         "INSERT INTO JUEGO
-        (Nombre, Descripcion, Puntos_Maximos)
-        VALUES (?, ?, ?)"
+        (Nombre, Carpeta, Descripcion, Puntos_Maximos)
+        VALUES (?, ?, ?, ?)"
     );
     $insertarJuego->execute([
         $nombre,
+        $carpeta,
         $descripcion,
         (int)$puntosMaximos
     ]);
