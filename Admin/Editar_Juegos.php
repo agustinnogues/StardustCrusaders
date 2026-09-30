@@ -4,6 +4,100 @@ $idAdministrador = $_SESSION["id_usuario"];
 
 $mensaje = "";
 $error = "";
+// ELIMINAR JUEGO
+if (
+    $_SERVER["REQUEST_METHOD"] === "POST"
+    && isset($_POST["eliminar_juego"])
+) {
+    $idJuego = intval($_POST["id_juego"]);
+    try {
+        // Buscar el juego
+        $consulta = $conexion->prepare("
+            SELECT ID_J, Nombre, Carpeta
+            FROM JUEGO
+            WHERE ID_J = ?
+        ");
+        $consulta->execute([$idJuego]);
+        $juegoEliminar = $consulta->fetch(PDO::FETCH_ASSOC);
+        if (!$juegoEliminar) {
+            throw new Exception("El juego no existe.");
+        }
+        // Carpeta del juego
+        $carpetaJuegos = dirname(__DIR__) . "/juegos";
+        $rutaJuego = $carpetaJuegos . "/" . $juegoEliminar["Carpeta"];
+        /*
+         * 1. REGISTRAR LA ELIMINACIÓN
+         */
+        $accion =
+            "Eliminó el juego "
+            . $juegoEliminar["Nombre"]
+            . " (ID: "
+            . $idJuego
+            . ")";
+        $registro = $conexion->prepare("
+            INSERT INTO ADMIN_J
+            (
+                ID_Usu,
+                ID_Jue,
+                Fecha,
+                Accion
+            )
+            VALUES (?, ?, NOW(), ?)
+        ");
+        $registro->execute([
+            $idAdministrador,
+            $idJuego,
+            $accion
+        ]);
+        /*
+         * 2. BORRAR REGISTROS RELACIONADOS EN JUE_PAR
+         */
+        $borrarJugadores = $conexion->prepare("
+            DELETE FROM JUE_PAR
+            WHERE ID_J = ?
+        ");
+        $borrarJugadores->execute([$idJuego]);
+        /*
+         * 3. BORRAR EL JUEGO
+        */
+        $borrarJuego = $conexion->prepare("
+            DELETE FROM JUEGO
+            WHERE ID_J = ?
+        ");
+        $borrarJuego->execute([$idJuego]);
+        /*
+         * 4. BORRAR CARPETA Y ARCHIVOS DEL JUEGO
+         */
+        if (is_dir($rutaJuego)) {
+            $archivos = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator(
+                    $rutaJuego,
+                    RecursiveDirectoryIterator::SKIP_DOTS
+                ),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($archivos as $archivo) {
+                if ($archivo->isDir()) {
+                    rmdir($archivo->getRealPath());
+                } else {
+                    unlink($archivo->getRealPath());
+                }
+            }
+            rmdir($rutaJuego);
+        }
+        /*
+         * 5. MENSAJE
+         */
+        $mensaje =
+            "El juego \"" .
+            $juegoEliminar["Nombre"] .
+            "\" fue eliminado correctamente.";
+    } catch (Exception $e) {
+        $error =
+            "ERROR: " .
+            $e->getMessage();
+    }
+}
 // EDITAR JUEGO
 if (
     $_SERVER["REQUEST_METHOD"] === "POST"
@@ -436,8 +530,25 @@ if (isset($_GET["editar_juego"])) {
                                 href="Admin.php?tab=juegos&editar_juego=<?= $juego["ID_J"] ?>"
                                 class="botonAdmin botonEditar"
                             >
-                                Editar
-                            </a>
+                                Editar      
+                            <form
+                                method="POST"
+                                style="display:inline;"
+                                onsubmit="return confirm('¿Seguro que querés eliminar este juego? Esta acción no se puede deshacer.');"
+                            >
+                            <input
+                                type="hidden"
+                                name="id_juego"
+                                value="<?= $juego["ID_J"] ?>"
+                            >
+                            <button
+                                type="submit"
+                                name="eliminar_juego"
+                                class="botonAdmin botonEliminar"
+                                >
+                                Eliminar
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -383,6 +383,7 @@ if (isset($_GET["editar_usuario"])) {
             </div>
             <div class="campoAdmin">
                 <label>
+                    Líder de equipo
                     <input
                         type="checkbox"
                         name="rango"
@@ -390,7 +391,6 @@ if (isset($_GET["editar_usuario"])) {
                             ? "checked"
                             : "" ?>
                     >
-                    Líder de equipo
                 </label>
             </div>
             <div>

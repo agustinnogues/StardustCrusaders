@@ -81,9 +81,9 @@ include "../includes/Header.php";
     <div class="adminContenido">
         <?php
         if ($tab === "usuarios") {
-            include "Usuarios.php";
+            include "Editar_Usuarios.php";
         } elseif ($tab === "juegos") {
-            include "juegos.php";
+            include "Editar_juegos.php";
         } elseif ($tab === "agregar") {
             include "agregar_juego.php";
         } else {

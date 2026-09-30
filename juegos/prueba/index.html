@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laberinto Infinito</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="juego">
+        <h1>LABERINTO INFINITO</h1>
+        <p class="descripcion">
+            Te has adentrado en el Laberinto Infinito, elige sabiamente por donde cruzar y encuentra la salida al exterior o perese en el intento.
+        </p>
+        <div id="mensaje" class="mensaje">
+            3 caminos se muestran ante ti, elige sabiamente
+        </div>
+        <!-- Laberinto -->
+        <div id="laberinto" class="laberinto">
+            <pre class="camino camino-izquierda">
+
+            ####
+        ####   #
+    ####       #
+####           #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#
+</pre>
+            <pre class="camino camino-frente">
+################
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+            </pre>
+<pre class="camino camino-derecha">
+
+####
+#   ####
+#       ####
+#           ####
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+#              #
+               #
+        </pre>
+        </div>
+        <!-- Opciones -->
+        <div class="opciones">
+            <button onclick="elegirCamino('izquierda')">
+                ← Izquierda
+            </button>
+            <button onclick="elegirCamino('frente')">
+                ↑ Frente
+            </button>
+            <button onclick="elegirCamino('derecha')">
+                → Derecha
+            </button>
+        </div>
+        <button id="reiniciar" onclick="reiniciarJuego()">
+            Reiniciar juego
+        </button>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
