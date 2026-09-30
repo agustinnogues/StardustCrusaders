@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Tu correo configurado
             $mail->Username   = 'agustinnogues1@gmail.com'; 
             // Tu contraseña de aplicación de 16 caracteres
-            $mail->Password   = 'jcnv kskl ihsp ripd'; 
+            $mail->Password   = 'cambiarDespues'; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
