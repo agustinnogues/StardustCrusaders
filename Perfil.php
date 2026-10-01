@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "Conexion.php";
+require_once "Juegos/conversorPuntaje.php";
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION["id_usuario"])) {
@@ -12,6 +13,7 @@ $id_usuario = $_SESSION["id_usuario"];
 $usuario = [];
 $mi_equipo = null;
 $integrantes = [];
+$puntajes = [];
 
 try {
     $pdo = Conexion::conectar();
@@ -38,6 +40,9 @@ try {
         $stmt_int->execute([$mi_equipo['ID_E']]);
         $integrantes = $stmt_int->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // 4. Obtener las puntuaciones máximas del usuario por cada juego
+    $puntajes = conversorPuntajes::obtenerPuntajesPorUsuario($id_usuario);
 
 } catch (Exception $e) {
     $error_db = $e->getMessage();
@@ -174,20 +179,22 @@ try {
                 <table>
                     <tr>
                         <th>Juego</th>
-                        <th>Puntos</th>
+                        <th>Puntos Máximos</th>
+                        <th>Puntos Totales</th>
                     </tr>
-                    <tr>
-                        <td>Snake</td>
-                        <td>560</td>
-                    </tr>
-                    <tr>
-                        <td>Memoria</td>
-                        <td>320</td>
-                    </tr>
-                    <tr>
-                        <td>Adivina la Bandera</td>
-                        <td>920</td>
-                    </tr>
+                    <?php if (!empty($puntajes)): ?>
+                        <?php foreach ($puntajes as $row): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['Nombre']); ?></td>
+                                <td><?php echo htmlspecialchars($row['Max_Puntos']); ?></td>
+                                <td><?php echo htmlspecialchars($row['Puntos_Totales']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="3">Aún no tienes partidas registradas.</td>
+                        </tr>
+                    <?php endif; ?>
                 </table>
             </div>
         </div>

@@ -2,87 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laberinto Infinito</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Juego de Prueba - Sumas</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .tarjeta-juego { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9; }
+        input[type="number"] { padding: 8px; font-size: 16px; width: 80px; text-align: center; }
+        button { padding: 8px 15px; font-size: 16px; background: #337ab7; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #mensaje { margin-top: 15px; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <main class="juego">
-        <h1>LABERINTO INFINITO</h1>
-        <p class="descripcion">
-            Te has adentrado en el Laberinto Infinito, elige sabiamente por donde cruzar y encuentra la salida al exterior o perese en el intento.
-        </p>
-        <div id="mensaje" class="mensaje">
-            3 caminos se muestran ante ti, elige sabiamente
-        </div>
-        <!-- Laberinto -->
-        <div id="laberinto" class="laberinto">
-            <pre class="camino camino-izquierda">
 
-            ####
-        ####   #
-    ####       #
-####           #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#
-</pre>
-            <pre class="camino camino-frente">
-################
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-            </pre>
-<pre class="camino camino-derecha">
+    <div class="tarjeta-juego">
+        <h2>➕ Juego de Sumas Rápido</h2>
+        <p>Resuelve la siguiente operación para ganar <strong>10 puntos</strong>:</p>
+        
+        <div style="font-size: 24px; margin: 20px 0;">
+            <span id="num1">0</span> + <span id="num2">0</span> = 
+            <input type="number" id="respuestaUsuario" autofocus>
+        </div>
+        
+        <button onclick="verificarRespuesta()">Comprobar</button>
+        <div id="mensaje"></div>
 
-####
-#   ####
-#       ####
-#           ####
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-#              #
-               #
-        </pre>
+        <div style="margin-top: 20px;">
+            <a href="../Perfil.php" style="text-decoration: none; color: #337ab7;">← Volver al Perfil</a>
         </div>
-        <!-- Opciones -->
-        <div class="opciones">
-            <button onclick="elegirCamino('izquierda')">
-                ← Izquierda
-            </button>
-            <button onclick="elegirCamino('frente')">
-                ↑ Frente
-            </button>
-            <button onclick="elegirCamino('derecha')">
-                → Derecha
-            </button>
-        </div>
-        <button id="reiniciar" onclick="reiniciarJuego()">
-            Reiniciar juego
-        </button>
-    </main>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

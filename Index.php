@@ -19,7 +19,9 @@
 <section class="contenedorJuegos">
     <div class="juego">
         <img src="https://picsum.photos/350/180?1">
-        <h3>Adivina la Bandera</h3>
+        <a href="Juegos/prueba/index.html" class="text-decoration-none text-dark">
+        <h3>Calculadora</h3>
+        </a>
     </div>
     <div class="juego">
         <img src="https://picsum.photos/350/180?2">

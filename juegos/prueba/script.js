@@ -1,163 +1,82 @@
-// VARIABLES DEL JUEGO
-let puntos = 0;
-let nivel = 1;
-let juegoActivo = true;
-// ELEMENTOS HTML
-const mensajeElemento = document.getElementById("mensaje");
-const botones = document.querySelectorAll(".opciones button");
-// DIRECCIONES
-const direcciones = [
-    "izquierda",
-    "frente",
-    "derecha"
-];
-// CAMINO CORRECTO
-let caminoCorrecto;
-// GENERAR NUEVO CAMINO
-function generarCamino() {
-    const numeroAleatorio = Math.floor(
-        Math.random() * direcciones.length
-    );
-    caminoCorrecto = direcciones[numeroAleatorio];
+let valor1 = 0;
+let valor2 = 0;
+const puntosGanados = 10; // Puntos fijos al acertar
+
+function generarSuma() {
+    valor1 = Math.floor(Math.random() * 20) + 1; // Número aleatorio entre 1 y 20
+    valor2 = Math.floor(Math.random() * 20) + 1;
+    
+    document.getElementById("num1").textContent = valor1;
+    document.getElementById("num2").textContent = valor2;
+    document.getElementById("respuestaUsuario").value = "";
+    document.getElementById("respuestaUsuario").focus();
 }
-// GENERAR LABERINTO
-// Esta función utiliza RECURSIVIDAD.
-// Cada vez que se genera un nuevo tramo,
-// la función puede volver a generar otro.
-// La condición "nivel >= 30" funciona como
-// condición de parada para la generación
-// inicial del laberinto.
-function generarLaberinto(nivelActual) {
-    if (nivelActual >= 30) {
+
+function verificarRespuesta() {
+    const respuestaInput = document.getElementById("respuestaUsuario").value;
+    const mensaje = document.getElementById("mensaje");
+
+    if (respuestaInput === "") {
+        mensaje.textContent = "Por favor ingresa un número.";
+        mensaje.style.color = "orange";
         return;
     }
-    crearTramoVisual(nivelActual);
-    generarLaberinto(nivelActual + 1);
-}
-// CREAR TRAMO VISUAL
-function crearTramoVisual(numero) {
-    const laberinto = document.getElementById("laberinto");
-    /*
-        Por ahora solamente modificamos
-        ligeramente el aspecto del laberinto
-        dependiendo del tramo.
-    */
-    const intensidad = Math.min(
-        30 + numero,
-        80
-    );
-    laberinto.style.borderColor =
-        `rgb(${intensidad}, ${intensidad}, ${intensidad})`;
-}
-// ELEGIR CAMINO
-function elegirCamino(eleccion) {
-    // Si el juego terminó, no hacemos nada.
-    if (!juegoActivo) {
-        return;
-    }
-    // Desactivamos los botones mientras
-    // mostramos el resultado.
-    botones.forEach(boton => {
-        boton.disabled = true;
-    });
-    // COMPROBAR ELECCIÓN
-    if (eleccion === caminoCorrecto) {
-        // CAMINO CORRECTO
-        puntos++;
-        mensajeElemento.textContent =
-            "Sientes una brisa refrescante y el olor pasto";
-        mensajeElemento.className =
-            "mensaje correcto";
+
+    const respuestaNumerica = parseInt(respuestaInput);
+    const resultadoCorrecto = valor1 + valor2;
+
+    if (respuestaNumerica === resultadoCorrecto) {
+        mensaje.textContent = "¡Correcto! Guardando puntos...";
+        mensaje.style.color = "green";
+        
+        // Enviamos los puntos al servidor
+        enviarPuntajeServidor(puntosGanados);
     } else {
-        /*
-            Si se equivocó, tenemos dos
-            posibilidades:
-            0 puntos
-            o
-            -1 punto
-            Esto permite que cada elección
-            tenga uno de los tres resultados:  
-            +1
-             0
-            -1
-        */
-        const resultado = Math.random();
-        if (resultado < 0.5) {
-            // Resultado neutral
-            mensajeElemento.textContent =
-                "El olor a humedad inunda tu nariz";
-            mensajeElemento.className =
-                "mensaje neutral";
-            // No modificamos puntos.
+        mensaje.textContent = `Incorrecto. El resultado era ${resultadoCorrecto}. Inténtalo de nuevo.`;
+        mensaje.style.color = "red";
+        setTimeout(generarSuma, 2000); // Genera otra suma tras 2 segundos
+    }
+}
+
+function enviarPuntajeServidor(puntos) {
+    const datosPartida = new URLSearchParams();
+    datosPartida.append('id_juego', 1); // ⚠️ Asegúrate de que este ID coincida con el juego en tu tabla JUEGO
+    datosPartida.append('puntos', puntos);
+
+    // Ruta correcta: Sube de 'prueba' a 'Juegos' donde está guardarPuntaje.php
+    fetch('../guardarPuntaje.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: datosPartida
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            mensaje.textContent = "¡Correcto! Puntos guardados con éxito. Redirigiendo al perfil...";
+            setTimeout(() => {
+                // Sube de 'prueba' -> 'Juegos' -> 'Pagina' para encontrar Perfil.php
+                window.location.href = "../../Perfil.php";
+            }, 1500);
         } else {
-            // Resultado negativo
-            puntos--;
-            mensajeElemento.textContent =
-                "Un miasma te rodea y la oscuridad se sierne sobre ti";
-            mensajeElemento.className =
-                "mensaje error";
+            mensaje.textContent = "Error al guardar: " + (data.mensaje || "Desconocido");
+            mensaje.style.color = "red";
         }
-    }
-    // COMPROBAR SI TERMINÓ EL JUEGO
-    if (puntos >= 5) {
-        ganar();
-        return;
-    }
-    if (puntos <= -5) {
-        perder();
-        return;
-    }
-    // SIGUIENTE TRAMO
-    nivel++;
- // Esperamos antes de habilitar
-// nuevamente los caminos 
-    setTimeout(() => {
-        generarCamino();
-        mensajeElemento.textContent =
-            "3 nuevos caminos se presentan ante ti, elige sabiamente";
-        mensajeElemento.className =
-            "mensaje";
-        botones.forEach(boton => {
-            boton.disabled = false;
-        });
-    }, 700);
-}
-// GANAR
-function ganar() {
-    juegoActivo = false;
-    mensajeElemento.textContent =
-        "Has escapado del laberinto";
-    mensajeElemento.className =
-        "mensaje ganaste";
-    botones.forEach(boton => {
-        boton.disabled = true;
+    })
+    .catch(error => {
+        console.error('Error de red:', error);
+        mensaje.textContent = "Error de conexión con el servidor.";
+        mensaje.style.color = "red";
     });
 }
-// PERDER
-function perder() {
-    juegoActivo = false;
-    mensajeElemento.textContent =
-        "Te has perdido en el laberinto";
-    mensajeElemento.className =
-        "mensaje perdiste";
-    botones.forEach(boton => {
-        boton.disabled = true;
-    });
-}
-// REINICIAR
-function reiniciarJuego() {
-    puntos = 0;
-    nivel = 1;
-    juegoActivo = true;
-    mensajeElemento.textContent =
-        "Elige uno de los tres caminos...";
-    mensajeElemento.className =
-        "mensaje";
-    botones.forEach(boton => {
-        boton.disabled = false;
-    });
-    generarCamino();
-}
-// INICIAR JUEGO
-generarCamino();
-generarLaberinto(1);
+
+// Permitir presionar "Enter" para enviar la respuesta
+document.getElementById("respuestaUsuario").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        verificarRespuesta();
+    }
+});
+
+// Iniciar juego al cargar la página
+generarSuma();

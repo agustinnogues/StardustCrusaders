@@ -21,12 +21,6 @@ function generarCamino() {
     caminoCorrecto = direcciones[numeroAleatorio];
 }
 // GENERAR LABERINTO
-// Esta función utiliza RECURSIVIDAD.
-// Cada vez que se genera un nuevo tramo,
-// la función puede volver a generar otro.
-// La condición "nivel >= 30" funciona como
-// condición de parada para la generación
-// inicial del laberinto.
 function generarLaberinto(nivelActual) {
     if (nivelActual >= 30) {
         return;
@@ -37,11 +31,6 @@ function generarLaberinto(nivelActual) {
 // CREAR TRAMO VISUAL
 function crearTramoVisual(numero) {
     const laberinto = document.getElementById("laberinto");
-    /*
-        Por ahora solamente modificamos
-        ligeramente el aspecto del laberinto
-        dependiendo del tramo.
-    */
     const intensidad = Math.min(
         30 + numero,
         80
@@ -51,46 +40,26 @@ function crearTramoVisual(numero) {
 }
 // ELEGIR CAMINO
 function elegirCamino(eleccion) {
-    // Si el juego terminó, no hacemos nada.
     if (!juegoActivo) {
         return;
     }
-    // Desactivamos los botones mientras
-    // mostramos el resultado.
     botones.forEach(boton => {
         boton.disabled = true;
     });
-    // COMPROBAR ELECCIÓN
     if (eleccion === caminoCorrecto) {
-        // CAMINO CORRECTO
         puntos++;
         mensajeElemento.textContent =
             "Sientes una brisa refrescante y el olor pasto";
         mensajeElemento.className =
             "mensaje correcto";
     } else {
-        /*
-            Si se equivocó, tenemos dos
-            posibilidades:
-            0 puntos
-            o
-            -1 punto
-            Esto permite que cada elección
-            tenga uno de los tres resultados:  
-            +1
-             0
-            -1
-        */
         const resultado = Math.random();
         if (resultado < 0.5) {
-            // Resultado neutral
             mensajeElemento.textContent =
                 "El olor a humedad inunda tu nariz";
             mensajeElemento.className =
                 "mensaje neutral";
-            // No modificamos puntos.
         } else {
-            // Resultado negativo
             puntos--;
             mensajeElemento.textContent =
                 "Un miasma te rodea y la oscuridad se sierne sobre ti";
@@ -98,7 +67,6 @@ function elegirCamino(eleccion) {
                 "mensaje error";
         }
     }
-    // COMPROBAR SI TERMINÓ EL JUEGO
     if (puntos >= 5) {
         ganar();
         return;
@@ -107,10 +75,7 @@ function elegirCamino(eleccion) {
         perder();
         return;
     }
-    // SIGUIENTE TRAMO
     nivel++;
- // Esperamos antes de habilitar
-// nuevamente los caminos 
     setTimeout(() => {
         generarCamino();
         mensajeElemento.textContent =
@@ -122,6 +87,33 @@ function elegirCamino(eleccion) {
         });
     }, 700);
 }
+
+// NUEVA FUNCIÓN PARA ENVIAR EL PUNTAJE AL SERVIDOR
+function enviarPuntajeServidor(puntajeFinal) {
+    const datosPartida = new URLSearchParams();
+    datosPartida.append('id_juego', 1); // ID_J de tu juego en la base de datos
+    datosPartida.append('puntos', puntajeFinal);
+
+    fetch('../guardar_puntaje.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: datosPartida
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('¡Puntaje guardado con éxito!');
+        } else {
+            console.error('Error al guardar:', data.mensaje);
+        }
+    })
+    .catch(error => {
+        console.error('Error de red:', error);
+    });
+}
+
 // GANAR
 function ganar() {
     juegoActivo = false;
@@ -132,6 +124,7 @@ function ganar() {
     botones.forEach(boton => {
         boton.disabled = true;
     });
+    enviarPuntajeServidor(puntos); // Envía el puntaje al ganar
 }
 // PERDER
 function perder() {
@@ -143,6 +136,7 @@ function perder() {
     botones.forEach(boton => {
         boton.disabled = true;
     });
+    enviarPuntajeServidor(puntos); // Envía el puntaje (puede ser negativo) al perder
 }
 // REINICIAR
 function reiniciarJuego() {
