@@ -31,9 +31,6 @@ $ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
                 <a href="<?= $ruta ?>Rankings.php">
                     Rankings 
                 </a>
-                <a href="#">
-                    Mis juegos
-                </a>
                 <?php if (!empty($_SESSION['Rol'])): ?>
                     <hr>
                     <a href="<?= $ruta ?>Admin/Admin.php">
