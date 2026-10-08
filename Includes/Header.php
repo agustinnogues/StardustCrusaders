@@ -28,9 +28,6 @@ $ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
                 <a href="<?= $ruta ?>perfil.php">
                     Mi perfil
                 </a>
-                <a href="#">
-                    Configuración
-                </a>
                 <a href="<?= $ruta ?>Rankings.php">
                     Rankings 
                 </a>
