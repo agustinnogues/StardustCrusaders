@@ -43,12 +43,6 @@ $ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
                         Panel Admin
                     </a>
                 <?php endif; ?>
-                <?php if (!empty($_SESSION['Rango'])): ?>
-                    <hr>
-                    <a href="#">
-                        Panel Equipo
-                    </a>
-                <?php endif; ?>
                 <hr>
                 <a href="<?= $ruta ?>Logout.php">
                     Cerrar sesión
