@@ -46,7 +46,7 @@ try {
                     onerror="this.src='https://picsum.photos/350/180?random=<?= (int)$juego['ID_J'] ?>'"
                 >
                 <h3><?= $nombreJuego ?></h3>
-                <a href="juegos/<?= $carpetaJuego ?>/index.html" class="botonJuego">
+                <a href="juegos/<?= $carpetaJuego ?>/index.html?id_juego=<?= (int)$juego['ID_J'] ?>" class="botonJuego">
                     Jugar
                 </a>
             </div>
