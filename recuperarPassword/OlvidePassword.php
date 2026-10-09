@@ -26,8 +26,7 @@
                     <button type="submit" class="btn btn-primary">Enviar enlace de recuperación</button>
                 </div>
                 <div class="text-center">
-                    <!-- Como Login.php está afuera en la raíz, subimos un nivel con ../ -->
-                    <a href="../Login.php" class="text-decoration-none small">Volver al inicio de sesión</a>
+                    <a href="../GestionSesion/Login.php" class="text-decoration-none small">Volver al inicio de sesión</a>
                 </div>
             </form>
         </div>

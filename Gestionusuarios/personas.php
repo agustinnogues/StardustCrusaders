@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit;
 }
 
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 
 $conexion = Conexion::conectar();
 
@@ -25,12 +25,12 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Listado de usuarios</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 
 <body>
 
-<?php include("includes/header.php"); ?>
+<?php include("../includes/header.php"); ?>
 
 <section class="titulo">
     <h2>Listado de usuarios</h2>
@@ -70,7 +70,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </section>
 
-<?php include("includes/footer.php"); ?>
+<?php include("../includes/footer.php"); ?>
 
 </body>
 </html>

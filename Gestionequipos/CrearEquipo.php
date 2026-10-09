@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 
 // 1. Verificar sesión
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $pdo->commit();
 
             // Redirigir al perfil con éxito
-            header("Location: Perfil.php?exito=equipo_creado");
+            header("Location: ../Gestionusuarios/Perfil.php?exito=equipo_creado");
             exit();
 
         } catch (Exception $e) {
@@ -61,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Crear Equipo - Stardust Crusaders</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-<?php include("includes/header.php"); ?>
+<?php include("../includes/header.php"); ?>
 
 <section class="pagina">
     <div class="perfilContainer" style="max-width: 600px; margin: 0 auto; display: block;">
@@ -89,13 +89,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
 
             <div style="margin-top: 15px; text-align: center;">
-                <a href="Perfil.php" style="color: #337ab7; text-decoration: none;">Volver al Perfil</a>
+                <a href="../Gestionusuarios/Perfil.php" style="color: #337ab7; text-decoration: none;">Volver al Perfil</a>
             </div>
         </div>
     </div>
 </section>
 
-<?php include("includes/footer.php"); ?>
-<script src="Js/scripts.js"></script>
+<?php include("../includes/footer.php"); ?>
+<script src="../Js/scripts.js"></script>
 </body>
 </html>

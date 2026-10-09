@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once 'Conexion.php';
+require_once '../Basededatos/Conexion.php';
 
-// Verificamos usando la variable exacta que definiste en auth.php
+// Verificamos usando la variable exacta que definiste en Auth.php
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 
@@ -37,7 +37,7 @@ try {
     $_SESSION = array();
     session_destroy();
 
-    header("Location: Index.php?mensaje=cuenta_eliminada");
+    header("Location: ../Index.php?mensaje=cuenta_eliminada");
     exit();
 
 } catch (Exception $e) {

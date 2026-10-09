@@ -56,8 +56,8 @@ function enviarPuntajeServidor(puntos) {
         if (data.status === 'success') {
             mensaje.textContent = "¡Correcto! Puntos guardados con éxito. Redirigiendo al perfil...";
             setTimeout(() => {
-                // Sube de 'prueba' -> 'Juegos' -> 'Pagina' para encontrar Perfil.php
-                window.location.href = "../../Perfil.php";
+                // Sube a la raíz del proyecto para volver al perfil.
+                window.location.href = "../../Gestionusuarios/Perfil.php";
             }, 1500);
         } else {
             mensaje.textContent = "Error al guardar: " + (data.mensaje || "Desconocido");

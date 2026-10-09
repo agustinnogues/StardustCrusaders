@@ -63,7 +63,7 @@
                     </form>
                     <p class="text-center mt-3">
                         ¿Ya tenés una cuenta?
-                        <a href="Login.php">
+                        <a href="../GestionSesion/Login.php">
                             Iniciar sesión
                         </a>
                     </p>

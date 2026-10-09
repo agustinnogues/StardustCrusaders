@@ -1,5 +1,5 @@
 <?php
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: Registro.php");
     exit;
@@ -31,7 +31,7 @@ try {
     // Confirmar cambios
     $pdo->commit();
     // Ir al login
-    header("Location: Login.php?registro=ok");
+    header("Location: ../GestionSesion/Login.php?registro=ok");
     exit;
 } catch (PDOException $e) {
     // Si algo salió mal, deshacer cambios

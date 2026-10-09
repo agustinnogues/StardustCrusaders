@@ -2,10 +2,10 @@
 
 session_start();
 
-require_once "Conexion.php";
+require_once "Basededatos/Conexion.php";
 
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: GestionSesion/Login.php");
     exit();
 }
 

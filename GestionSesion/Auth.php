@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: Login.php");
     exit;
@@ -25,7 +25,7 @@ try {
         $_SESSION["correo"] = $usuarioBD["Correo_Electronico"];
         $_SESSION["Rol"] = $usuarioBD["Rol"];
         $_SESSION["Rango"] = $usuarioBD["Rango"];
-        header("Location: Index.php");
+        header("Location: ../Index.php");
         exit;
     } else {
         header("Location: Login.php?error=credenciales");

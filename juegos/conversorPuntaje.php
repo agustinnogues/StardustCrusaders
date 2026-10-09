@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Conexion.php';
+require_once __DIR__ . '/../Basededatos/Conexion.php';
 
 class conversorPuntajes {
 

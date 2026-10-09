@@ -1,5 +1,5 @@
 <?php
-require_once "Instalar.php";
+require_once "../Basededatos/Instalar.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,7 +27,7 @@ require_once "Instalar.php";
                                 Usuario o contraseña incorrectos.
                             </div>
                         <?php endif; ?>
-                        <form action="auth.php" method="POST">
+                        <form action="Auth.php" method="POST">
                             <!-- USUARIO -->
                             <div class="mb-3">
                                 <label class="form-label">
@@ -55,7 +55,7 @@ require_once "Instalar.php";
                             
                             <!-- ENLACE ¿OLVIDASTE TU CONTRASEÑA? NUEVO -->
                             <div class="mb-3 text-end">
-                                <a href="recuperarPassword/OlvidePassword.php" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
+                                <a href="../recuperarPassword/OlvidePassword.php" class="text-decoration-none small">¿Olvidaste tu contraseña?</a>
                             </div>
 
                             <!-- BOTÓN -->
@@ -77,7 +77,7 @@ require_once "Instalar.php";
                     </div>
                     <p class="text-center mt-3">
                     ¿No tenés una cuenta?
-                    <a href="Registro.php">Registrate</a>
+                    <a href="../Gestionusuarios/Registro.php">Registrate</a>
                     </p>
                 </div>
             </div>

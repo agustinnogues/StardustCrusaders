@@ -1,5 +1,5 @@
 <?php
-require_once "Conexion.php";
+require_once "Basededatos/Conexion.php";
 try {
     $conexion = Conexion::conectar();
     $consulta = $conexion->query(

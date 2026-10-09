@@ -1,6 +1,6 @@
 <?php
 // Incluimos la conexión a la base de datos (subiendo un nivel con ../ porque está en la raíz)
-require_once '../Conexion.php';
+require_once '../Basededatos/Conexion.php';
 
 // Importamos las clases necesarias de PHPMailer (buscando la carpeta vendor en la raíz)
 require_once '../vendor/autoload.php';
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->send();
 
             // Mensaje de éxito visual para el usuario
-            echo "<div class='container mt-5'><div class='alert alert-success text-center'>¡Correo enviado con éxito! Revisa tu bandeja de entrada para restablecer tu contraseña. <br><a href='../Login.php' class='alert-link'>Volver al Login</a></div></div>";
+            echo "<div class='container mt-5'><div class='alert alert-success text-center'>¡Correo enviado con éxito! Revisa tu bandeja de entrada para restablecer tu contraseña. <br><a href='../GestionSesion/Login.php' class='alert-link'>Volver al Login</a></div></div>";
 
         } else {
             echo "<div class='container mt-5'><div class='alert alert-danger text-center'>El correo electrónico no está registrado en el sistema. <br><a href='OlvidePassword.php' class='alert-link'>Intentar de nuevo</a></div></div>";

@@ -1,5 +1,5 @@
 <?php
-require_once '../Conexion.php';
+require_once '../Basededatos/Conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $token = $_POST['token'];
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="card-body">
                         <h3 class="card-title text-success mb-3">¡Contraseña Actualizada!</h3>
                         <p class="text-muted mb-4">Tu contraseña ha sido cambiada exitosamente. Ya puedes iniciar sesión con tu nueva clave.</p>
-                        <a href="../Login.php" class="btn btn-primary w-100">Ir al Login</a>
+                        <a href="../GestionSesion/Login.php" class="btn btn-primary w-100">Ir al Login</a>
                     </div>
                 </div>
             </body>

@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 
 // 1. Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_invitado = trim($_POST["nombre_invitado"] ?? "");
 
     if (empty($nombre_invitado)) {
-        header("Location: Perfil.php?invitacion=no_encontrado");
+        header("Location: ../Gestionusuarios/Perfil.php?invitacion=no_encontrado");
         exit();
     }
 
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $datos_lider = $stmt_lider->fetch(PDO::FETCH_ASSOC);
 
         if (!$datos_lider || $datos_lider['Rango'] != 1) {
-            header("Location: Perfil.php");
+            header("Location: ../Gestionusuarios/Perfil.php");
             exit();
         }
 
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $equipo_lider = $stmt_eq->fetch(PDO::FETCH_ASSOC);
 
         if (!$equipo_lider) {
-            header("Location: Perfil.php");
+            header("Location: ../Gestionusuarios/Perfil.php");
             exit();
         }
         $id_equipo = $equipo_lider['ID_E'];
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Si el usuario no existe
         if (!$usuario_invitado) {
-            header("Location: Perfil.php?invitacion=no_encontrado");
+            header("Location: ../Gestionusuarios/Perfil.php?invitacion=no_encontrado");
             exit();
         }
 
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Si intenta invitarse a sí mismo
         if ($id_invitado == $id_usuario_actual) {
-            header("Location: Perfil.php?invitacion=auto_invitacion");
+            header("Location: ../Gestionusuarios/Perfil.php?invitacion=auto_invitacion");
             exit();
         }
 
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_check = $pdo->prepare("SELECT ID_E FROM INTEGRA WHERE ID_U = ?");
         $stmt_check->execute([$id_invitado]);
         if ($stmt_check->fetch()) {
-            header("Location: Perfil.php?invitacion=ya_tiene_equipo");
+            header("Location: ../Gestionusuarios/Perfil.php?invitacion=ya_tiene_equipo");
             exit();
         }
 
@@ -75,18 +75,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_insert->execute([$id_invitado, $id_equipo]);
 
         $pdo->commit();
-        header("Location: Perfil.php?invitacion=exito");
+        header("Location: ../Gestionusuarios/Perfil.php?invitacion=exito");
         exit();
 
     } catch (Exception $e) {
         if (isset($pdo) && $pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        header("Location: Perfil.php?invitacion=error");
+        header("Location: ../Gestionusuarios/Perfil.php?invitacion=error");
         exit();
     }
 } else {
-    header("Location: Perfil.php");
+    header("Location: ../Gestionusuarios/Perfil.php");
     exit();
 }
 ?>

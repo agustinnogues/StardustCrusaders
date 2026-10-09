@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once "../Conexion.php";
+require_once "../Basededatos/Conexion.php";
 // SEGURIDAD
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: ../Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 
 if (empty($_SESSION["Rol"])) {
-    header("Location: ../Perfil.php");
+    header("Location: ../Gestionusuarios/Perfil.php");
     exit();
 }
 // CONEXIÓN
@@ -83,11 +83,11 @@ include "../includes/Header.php";
         if ($tab === "usuarios") {
             include "Editar_Usuarios.php";
         } elseif ($tab === "juegos") {
-            include "Editar_juegos.php";
+            include "Editar_Juegos.php";
         } elseif ($tab === "agregar") {
             include "agregar_juego.php";
         } else {
-            include "Usuarios.php";
+            include "Editar_Usuarios.php";
         }
         ?>
     </div>

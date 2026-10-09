@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once "Conexion.php";
-require_once "Juegos/conversorPuntaje.php";
+require_once "../Basededatos/Conexion.php";
+require_once "../juegos/conversorPuntaje.php";
 
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 
@@ -53,10 +53,10 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>Mi Perfil - Stardust Crusaders</title>
-    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-<?php include("includes/header.php"); ?>
+<?php include("../includes/header.php"); ?>
 <section class="pagina">
     <div class="perfilContainer">
         <div class="perfilIzquierda">
@@ -69,7 +69,7 @@ try {
 
             <!-- Botón para borrar perfil -->
             <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px;">
-                <form action="EliminarPerfil.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu perfil permanentemente? Esta acción no se puede deshacer.');">
+                <form action="eliminarPerfil.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu perfil permanentemente? Esta acción no se puede deshacer.');">
                     <button type="submit" name="eliminar_cuenta" style="background-color: #d9534f; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
                         🗑️ Borrar mi perfil
                     </button>
@@ -106,7 +106,7 @@ try {
                                 
                                 <!-- Si el usuario actual es líder y el integrante listado no es él mismo, mostrar botón Echar -->
                                 <?php if ($usuario['Rango'] == 1 && $integ['ID_U'] != $id_usuario): ?>
-                                    <form action="EcharMiembro.php" method="POST" style="display:inline;">
+                                    <form action="../Gestionequipos/EcharMiembro.php" method="POST" style="display:inline;">
                                         <input type="hidden" name="id_miembro" value="<?php echo $integ['ID_U']; ?>">
                                         <button type="submit" onclick="return confirm('¿Estás seguro de expulsar a este integrante?');" style="background: #d9534f; color: white; border: none; padding: 2px 6px; cursor: pointer; float: right; border-radius: 3px;">
                                             Echar
@@ -137,7 +137,7 @@ try {
                                 <?php endif; ?>
                             <?php endif; ?>
 
-                            <form action="InvitarMiembro.php" method="POST" style="display: flex; gap: 8px;">
+                            <form action="../Gestionequipos/InvitarMiembro.php" method="POST" style="display: flex; gap: 8px;">
                                 <input type="text" name="nombre_invitado" placeholder="Nombre de usuario" required style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                                 <button type="submit" style="background-color: #337ab7; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;">
                                     Invitar
@@ -148,7 +148,7 @@ try {
 
                     <div style="margin-top: 20px;">
                         <!-- Botón para salir del equipo -->
-                        <form action="SalirEquipo.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas salir del equipo?');">
+                        <form action="../Gestionequipos/SalirEquipo.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas salir del equipo?');">
                             <button type="submit" style="background-color: #f0ad4e; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px;">
                                 Salir del equipo
                             </button>
@@ -158,7 +158,7 @@ try {
                 <?php else: ?>
                     <p>Actualmente no formas parte de ningún equipo.</p>
                     <!-- Botón para redirigir a la creación de equipos -->
-                    <a href="CrearEquipo.php" style="display: inline-block; margin-top: 10px; background-color: #5cb85c; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
+                    <a href="../Gestionequipos/CrearEquipo.php" style="display: inline-block; margin-top: 10px; background-color: #5cb85c; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px;">
                         Crear mi propio equipo
                     </a>
                 <?php endif; ?>
@@ -200,7 +200,7 @@ try {
         </div>
     </div>
 </section>
-<?php include("includes/footer.php"); ?>
-<script src="Js/scripts.js"></script>
+<?php include("../includes/footer.php"); ?>
+<script src="../Js/scripts.js"></script>
 </body>
 </html>

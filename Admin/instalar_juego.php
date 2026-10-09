@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../Conexion.php";
+require_once "../Basededatos/Conexion.php";
 // 1. COMPROBAR QUE EL USUARIO SEA ADMINISTRADOR
 if (empty($_SESSION["Rol"])) {
     header("Location: Admin.php");

@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once "Conexion.php";
+require_once "../Basededatos/Conexion.php";
 if (!isset($_SESSION["id_usuario"])) {
-    header("Location: Login.php");
+    header("Location: ../GestionSesion/Login.php");
     exit();
 }
 $id_usuario = $_SESSION["id_usuario"];
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!$integracion) {
             $pdo->rollBack();
-            header("Location: Perfil.php");
+            header("Location: ../Gestionusuarios/Perfil.php");
             exit();
         }
 
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // ¡NO LO DEJES SALIR! Para evitar que el equipo quede vacío u huérfano.
         if ($es_lider && $total_miembros <= 1) {
             $pdo->rollBack();
-            header("Location: Perfil.php?error=lider_con_miembros"); // O puedes usar otro mensaje si prefieres
+            header("Location: ../Gestionusuarios/Perfil.php?error=lider_con_miembros"); // O puedes usar otro mensaje si prefieres
             exit();
         }
 
@@ -54,18 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $pdo->commit();
-        header("Location: Perfil.php?exito=salida_exitosa");
+        header("Location: ../Gestionusuarios/Perfil.php?exito=salida_exitosa");
         exit();
 
     } catch (Exception $e) {
         if (isset($pdo) && $pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        header("Location: Perfil.php?error=db_error");
+        header("Location: ../Gestionusuarios/Perfil.php?error=db_error");
         exit();
     }
 } else {
-    header("Location: Perfil.php");
+    header("Location: ../Gestionusuarios/Perfil.php");
     exit();
 }
 ?>

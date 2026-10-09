@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
+$ruta = preg_match('~/(Admin|Gestionusuarios|Gestionequipos)/~i', $_SERVER['PHP_SELF']) ? '../' : '';
 ?>
 <header id="header">
     <div class="logo">
@@ -25,7 +25,7 @@ $ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
                 id="fotoPerfil"
             >
             <div class="menuPerfil" id="menuPerfil">
-                <a href="<?= $ruta ?>perfil.php">
+                <a href="<?= $ruta ?>Gestionusuarios/Perfil.php">
                     Mi perfil
                 </a>
                 <a href="<?= $ruta ?>Rankings.php">
@@ -38,7 +38,7 @@ $ruta = str_contains($_SERVER['PHP_SELF'], '/Admin/') ? '../' : '';
                     </a>
                 <?php endif; ?>
                 <hr>
-                <a href="<?= $ruta ?>Logout.php">
+                <a href="<?= $ruta ?>GestionSesion/Logout.php">
                     Cerrar sesión
                 </a>
             </div>
