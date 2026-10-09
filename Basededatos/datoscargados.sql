@@ -140,6 +140,18 @@ AND NOT EXISTS (
 -- =====================================================
 INSERT INTO JUEGO (Nombre, Carpeta, Descripcion, Puntos_Maximos)
 SELECT
+    'Juego de Sumas',
+    'prueba',
+    'Resuelve sumas para ganar puntos.',
+    10
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM JUEGO
+    WHERE Nombre = 'Juego de Sumas'
+);
+
+INSERT INTO JUEGO (Nombre, Carpeta, Descripcion, Puntos_Maximos)
+SELECT
     'Ahorcado',
     'Ahorcado',
     'Adivina la palabra antes de completar el ahorcado.',
