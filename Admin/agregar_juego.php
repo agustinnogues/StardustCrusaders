@@ -95,6 +95,13 @@
             El juego debe funcionar mediante HTML, CSS y JavaScript.
             No se permiten archivos PHP dentro del juego.
         </p>
+        <p>
+            Para guardar el resultado final, agregá antes de tu script:
+            <code>&lt;script src="../../Js/puntajes.js"&gt;&lt;/script&gt;</code>.
+            Cuando termine la partida, llamá
+            <code>StardustPuntajes.guardar(puntosFinales)</code>.
+            El catálogo proporciona automáticamente el ID del juego; no lo fijes en el código.
+        </p>
     </div>
     <button
         type="submit"

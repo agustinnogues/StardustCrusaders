@@ -1,6 +1,7 @@
 let valor1 = 0;
 let valor2 = 0;
 const puntosGanados = 10; // Puntos fijos al acertar
+let guardandoPuntaje = false;
 
 function generarSuma() {
     valor1 = Math.floor(Math.random() * 20) + 1; // Número aleatorio entre 1 y 20
@@ -29,8 +30,7 @@ function verificarRespuesta() {
         mensaje.textContent = "¡Correcto! Guardando puntos...";
         mensaje.style.color = "green";
         
-        // Enviamos los puntos al servidor
-        enviarPuntajeServidor(puntosGanados);
+        guardarPuntaje(puntosGanados);
     } else {
         mensaje.textContent = `Incorrecto. El resultado era ${resultadoCorrecto}. Inténtalo de nuevo.`;
         mensaje.style.color = "red";
@@ -38,35 +38,24 @@ function verificarRespuesta() {
     }
 }
 
-function enviarPuntajeServidor(puntos) {
-    const datosPartida = new URLSearchParams();
-    datosPartida.append('id_juego', 1); // ⚠️ Asegúrate de que este ID coincida con el juego en tu tabla JUEGO
-    datosPartida.append('puntos', puntos);
+function guardarPuntaje(puntos) {
+    if (guardandoPuntaje) {
+        return;
+    }
+    guardandoPuntaje = true;
 
-    // Ruta correcta: Sube de 'prueba' a 'Juegos' donde está guardarPuntaje.php
-    fetch('../guardarPuntaje.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: datosPartida
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
+    window.StardustPuntajes.guardar(puntos)
+    .then(() => {
             mensaje.textContent = "¡Correcto! Puntos guardados con éxito. Redirigiendo al perfil...";
             setTimeout(() => {
                 // Sube a la raíz del proyecto para volver al perfil.
                 window.location.href = "../../Gestionusuarios/Perfil.php";
             }, 1500);
-        } else {
-            mensaje.textContent = "Error al guardar: " + (data.mensaje || "Desconocido");
-            mensaje.style.color = "red";
-        }
     })
     .catch(error => {
-        console.error('Error de red:', error);
-        mensaje.textContent = "Error de conexión con el servidor.";
+        guardandoPuntaje = false;
+        console.error("Error al guardar el puntaje:", error);
+        mensaje.textContent = "Error al guardar: " + error.message;
         mensaje.style.color = "red";
     });
 }

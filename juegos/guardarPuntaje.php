@@ -2,27 +2,37 @@
 session_start();
 require_once "conversorPuntaje.php";
 
-if (!isset($_SESSION['id_usuario'])) {
-    echo json_encode(["status" => "error", "mensaje" => "Usuario no autenticado"]);
+header("Content-Type: application/json; charset=utf-8");
+
+function responderError($mensaje, $codigo) {
+    http_response_code($codigo);
+    echo json_encode(["status" => "error", "mensaje" => $mensaje]);
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_usuario = $_SESSION['id_usuario'];
-    $id_juego = $_POST['id_juego'] ?? null;
-    $puntos = $_POST['puntos'] ?? null;
-
-    if ($id_juego && $puntos !== null) {
-        $resultado = conversorPuntajes::guardarPartida($id_usuario, $id_juego, $puntos);
-        
-        if ($resultado) {
-            echo json_encode(["status" => "success", "mensaje" => "Puntaje guardado correctamente"]);
-        } else {
-            echo json_encode(["status" => "error", "mensaje" => "No se pudo guardar en la base de datos"]);
-        }
-    } else {
-        echo json_encode(["status" => "error", "mensaje" => "Datos incompletos"]);
-    }
-} else {
-    echo json_encode(["status" => "error", "mensaje" => "Método no permitido"]);
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    responderError("Método no permitido", 405);
 }
+
+if (empty($_SESSION["id_usuario"])) {
+    responderError("Usuario no autenticado", 401);
+}
+
+$idJuego = filter_input(INPUT_POST, "id_juego", FILTER_VALIDATE_INT);
+$puntos = filter_input(INPUT_POST, "puntos", FILTER_VALIDATE_INT);
+
+if ($idJuego === false || $idJuego === null || $idJuego <= 0 || $puntos === false || $puntos === null) {
+    responderError("El identificador del juego y el puntaje deben ser enteros válidos", 400);
+}
+
+$resultado = conversorPuntajes::guardarPartida(
+    (int)$_SESSION["id_usuario"],
+    $idJuego,
+    $puntos
+);
+
+if (!$resultado) {
+    responderError("No se pudo guardar en la base de datos", 500);
+}
+
+echo json_encode(["status" => "success", "mensaje" => "Puntaje guardado correctamente"]);

@@ -15,6 +15,7 @@ class conversorPuntajes {
                 'puntos' => $puntos
             ]);
         } catch (Exception $e) {
+            error_log("No se pudo guardar el resultado de la partida: " . $e->getMessage());
             return false;
         }
     }

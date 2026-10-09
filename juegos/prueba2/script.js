@@ -88,30 +88,16 @@ function elegirCamino(eleccion) {
     }, 700);
 }
 
-// NUEVA FUNCIÓN PARA ENVIAR EL PUNTAJE AL SERVIDOR
-function enviarPuntajeServidor(puntajeFinal) {
-    const datosPartida = new URLSearchParams();
-    datosPartida.append('id_juego', 1); // ID_J de tu juego en la base de datos
-    datosPartida.append('puntos', puntajeFinal);
-
-    fetch('../guardar_puntaje.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: datosPartida
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            console.log('¡Puntaje guardado con éxito!');
-        } else {
-            console.error('Error al guardar:', data.mensaje);
-        }
-    })
-    .catch(error => {
-        console.error('Error de red:', error);
-    });
+// Guarda una única fila con el puntaje final de la partida.
+function guardarPuntajeFinal() {
+    window.StardustPuntajes.guardar(puntos)
+        .then(() => {
+            mensajeElemento.textContent += " Puntaje guardado.";
+        })
+        .catch(error => {
+            console.error("Error al guardar el puntaje:", error);
+            mensajeElemento.textContent += " No se pudo guardar: " + error.message;
+        });
 }
 
 // GANAR
@@ -124,7 +110,7 @@ function ganar() {
     botones.forEach(boton => {
         boton.disabled = true;
     });
-    enviarPuntajeServidor(puntos); // Envía el puntaje al ganar
+    guardarPuntajeFinal();
 }
 // PERDER
 function perder() {
@@ -136,7 +122,7 @@ function perder() {
     botones.forEach(boton => {
         boton.disabled = true;
     });
-    enviarPuntajeServidor(puntos); // Envía el puntaje (puede ser negativo) al perder
+    guardarPuntajeFinal();
 }
 // REINICIAR
 function reiniciarJuego() {

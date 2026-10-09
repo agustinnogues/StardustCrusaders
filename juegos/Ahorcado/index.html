@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Adivina la palabra antes de que se complete el ahorcado.">
+    <title>Ahorcado - Stardust Crusaders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="juego">
+        <header class="encabezado">
+            <a class="volver" href="../../Juegos.php">← Volver a los juegos</a>
+            <p class="etiqueta">Stardust Crusaders</p>
+            <h1>Ahorcado</h1>
+            <p class="descripcion">Elegí una categoría y adiviná la palabra antes de que se complete el dibujo.</p>
+        </header>
+
+        <section class="panel" aria-labelledby="tituloPartida">
+            <div class="controles">
+                <label for="categoria">Categoría</label>
+                <select id="categoria">
+                    <option value="animales">Animales</option>
+                    <option value="paises">Países</option>
+                    <option value="colores">Colores</option>
+                    <option value="clubes">Clubes</option>
+                    <option value="videojuegos">Videojuegos</option>
+                </select>
+                <button id="nuevoJuego" class="boton boton-secundario" type="button">Nueva partida</button>
+            </div>
+
+            <h2 id="tituloPartida" class="solo-lectores">Partida de ahorcado</h2>
+            <div class="zona-juego">
+                <div class="dibujo" role="img" aria-label="Dibujo del ahorcado">
+                    <svg viewBox="0 0 220 240" aria-hidden="true">
+                        <line class="estructura" x1="24" y1="220" x2="196" y2="220"></line>
+                        <line class="estructura" x1="64" y1="220" x2="64" y2="24"></line>
+                        <line class="estructura" x1="64" y1="24" x2="158" y2="24"></line>
+                        <line class="estructura" x1="158" y1="24" x2="158" y2="52"></line>
+                        <circle class="parte" data-error="1" cx="158" cy="72" r="20"></circle>
+                        <line class="parte" data-error="2" x1="158" y1="92" x2="158" y2="150"></line>
+                        <line class="parte" data-error="3" x1="158" y1="108" x2="128" y2="132"></line>
+                        <line class="parte" data-error="4" x1="158" y1="108" x2="188" y2="132"></line>
+                        <line class="parte" data-error="5" x1="158" y1="150" x2="130" y2="184"></line>
+                        <line class="parte" data-error="6" x1="158" y1="150" x2="186" y2="184"></line>
+                    </svg>
+                </div>
+
+                <div class="progreso">
+                    <p id="contadorErrores" class="contador" aria-live="polite">Errores: 0 de 6</p>
+                    <p id="palabra" class="palabra" aria-live="polite" aria-label="Palabra oculta"></p>
+                    <p id="mensaje" class="mensaje" role="status" aria-live="polite">Elegí una letra para empezar.</p>
+                </div>
+            </div>
+
+            <div id="teclado" class="teclado" aria-label="Teclado de letras"></div>
+
+            <form id="formularioLetra" class="entrada" autocomplete="off">
+                <label for="letra">O escribí una letra</label>
+                <div class="entrada-fila">
+                    <input id="letra" name="letra" type="text" maxlength="2" inputmode="text" aria-describedby="ayudaLetra">
+                    <button class="boton" type="submit">Probar letra</button>
+                </div>
+                <small id="ayudaLetra">Se acepta una letra por intento.</small>
+            </form>
+        </section>
+
+        <p class="nota-puntaje">Adivinar la palabra otorga 100 puntos. Si se completa el dibujo, la partida vale 0 puntos.</p>
+    </main>
+
+    <script src="../../Js/puntajes.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
