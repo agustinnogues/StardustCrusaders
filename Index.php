@@ -58,11 +58,8 @@ try {
 <section class="informacion">
     <h2>Sobre Stardust Cruzaders</h2>
     <p>
-
-        Este sitio reúne juegos desarrollados por nuestra comunidad.
-        Próximamente podrás crear una cuenta, guardar tus puntuaciones,
-        competir con otros jugadores y descubrir nuevos juegos.
-
+        Este sitio reúne juegos desarrollados por nosotros, 
+        compite con otros jugadores y descubrir nuevos juegos.
     </p>
     <br><br><br><br><br><br><br><br><br>
 </section>
