@@ -1,0 +1,119 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+.juego {
+    width: 90%;
+    max-width: 900px;
+    text-align: center;
+}
+h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+.descripcion {
+    color: #aaa;
+    margin-bottom: 25px;
+}
+.mensaje {
+    min-height: 30px;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+/* Laberinto */
+.laberinto {
+    position: relative;
+    width: 60%;
+    height: 300px;
+    margin: auto;
+    overflow: hidden;
+    background: #191919;
+    border: 5px solid #333;
+    border-radius: 15px;
+}
+/*Camino central*/
+.camino {
+    position: absolute;
+    width: 30%;
+    height: 80%;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1;
+    color: #00ff88;
+    background: transparent;
+    border: none;
+    overflow: visible;
+    white-space: pre;
+    text-shadow: 0 0 5px #00ff88;
+}
+.camino-izquierda {
+    left: 5%;
+    top: 10%;
+}
+.camino-frente {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+}
+.camino-derecha {
+    right: 5%;
+    top: 10%;
+}
+/* Botones */
+.opciones {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+.opciones button {
+    padding: 15px 25px;
+    font-size: 18px;
+    color: white;
+    background: #252525;
+    border: 2px solid #555;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.opciones button:hover {
+    background: #444;
+    transform: scale(1.05);
+}
+.opciones button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+/* Boton reiniciar */
+#reiniciar {
+    margin-top: 25px;
+    padding: 10px 25px;
+    background: #111;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 8px;
+    cursor: pointer;
+}
+#reiniciar:hover {
+    background: #333;
+}
+/* Resultados  */
+.ganaste {
+    color: #00ff88;
+    font-size: 28px;
+}
+.perdiste {
+    color: #ff4444;
+    font-size: 28px;
+}
