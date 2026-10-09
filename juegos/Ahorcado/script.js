@@ -116,6 +116,7 @@ function palabraCompleta() {
     );
 }
 
+// Envía el puntaje de la partida y muestra si el guardado tuvo éxito.
 async function guardarPuntaje(puntos, partida) {
     try {
         await window.StardustPuntajes.guardar(puntos);

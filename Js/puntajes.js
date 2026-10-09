@@ -1,3 +1,4 @@
+// Valida el puntaje y lo envía al servidor junto con el ID del juego.
 (function (global) {
     const script = document.currentScript;
     if (!script || !script.src) {

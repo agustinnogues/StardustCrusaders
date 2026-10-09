@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../Basededatos/Conexion.php';
 
+// Guarda partidas en la base de datos y consulta los puntajes de un usuario.
 class conversorPuntajes {
 
     // Método para guardar una nueva partida
