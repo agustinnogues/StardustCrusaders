@@ -138,6 +138,24 @@ AND NOT EXISTS (
 -- =====================================================
 -- JUEGOS
 -- =====================================================
+UPDATE JUEGO
+SET Carpeta = 'prueba',
+    Descripcion = 'Resuelve sumas para ganar puntos.',
+    Puntos_Maximos = 10
+WHERE Nombre = 'Juego de Sumas';
+
+UPDATE JUEGO
+SET Carpeta = 'Ahorcado',
+    Descripcion = 'Adivina la palabra antes de completar el ahorcado.',
+    Puntos_Maximos = 100
+WHERE Nombre = 'Ahorcado';
+
+UPDATE JUEGO
+SET Carpeta = 'LabInf',
+    Descripcion = 'Elige el camino correcto para escapar del laberinto.',
+    Puntos_Maximos = 100
+WHERE Nombre = 'Laberinto Infinito';
+
 INSERT INTO JUEGO (Nombre, Carpeta, Descripcion, Puntos_Maximos)
 SELECT
     'Juego de Sumas',
@@ -162,90 +180,67 @@ WHERE NOT EXISTS (
     WHERE Nombre = 'Ahorcado'
 );
 
-INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
+INSERT INTO JUEGO (Nombre, Carpeta, Descripcion, Puntos_Maximos)
 SELECT
-    'Adivina la Bandera',
-    'Adivina a qué país pertenece cada bandera.',
+    'Laberinto Infinito',
+    'LabInf',
+    'Elige el camino correcto para escapar del laberinto.',
     100
 WHERE NOT EXISTS (
     SELECT 1
     FROM JUEGO
-    WHERE Nombre = 'Adivina la Bandera'
-);
-
-INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
-SELECT
-    'Snake',
-    'Clásico juego de la serpiente.',
-    500
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM JUEGO
-    WHERE Nombre = 'Snake'
-);
-
-INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
-SELECT
-    'Memoria',
-    'Encuentra las parejas de cartas.',
-    200
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM JUEGO
-    WHERE Nombre = 'Memoria'
-);
-
-INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
-SELECT
-    'Trivia Gamer',
-    'Responde preguntas sobre videojuegos.',
-    300
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM JUEGO
-    WHERE Nombre = 'Trivia Gamer'
-);
-
-INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
-SELECT
-    'Desafio Joestar',
-    'Desafío especial para los jugadores de Stardust Crusaders.',
-    1000
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM JUEGO
-    WHERE Nombre = 'Desafio Joestar'
+    WHERE Nombre = 'Laberinto Infinito'
 );
 -- =====================================================
 -- PARTIDAS
 -- =====================================================
 INSERT INTO JUE_PAR (ID_U, ID_J, Fecha, Puntos)
-SELECT u.ID_U, j.ID_J, '2026-09-01 18:30:00', 85
+SELECT u.ID_U, j.ID_J, '2026-09-01 18:30:00', 100
 FROM USUARIO u
 CROSS JOIN JUEGO j
 WHERE u.Nombre_Usuario = 'Valentino'
-AND j.Nombre = 'Adivina la Bandera';
+AND j.Nombre = 'Ahorcado'
+AND NOT EXISTS (
+    SELECT 1 FROM JUE_PAR jp
+    WHERE jp.ID_U = u.ID_U AND jp.ID_J = j.ID_J
+    AND jp.Fecha = '2026-09-01 18:30:00'
+);
 
 INSERT INTO JUE_PAR (ID_U, ID_J, Fecha, Puntos)
-SELECT u.ID_U, j.ID_J, '2026-09-02 19:00:00', 420
+SELECT u.ID_U, j.ID_J, '2026-09-02 19:00:00', 10
 FROM USUARIO u
 CROSS JOIN JUEGO j
 WHERE u.Nombre_Usuario = 'Lola'
-AND j.Nombre = 'Snake';
+AND j.Nombre = 'Juego de Sumas'
+AND NOT EXISTS (
+    SELECT 1 FROM JUE_PAR jp
+    WHERE jp.ID_U = u.ID_U AND jp.ID_J = j.ID_J
+    AND jp.Fecha = '2026-09-02 19:00:00'
+);
 
 INSERT INTO JUE_PAR (ID_U, ID_J, Fecha, Puntos)
-SELECT u.ID_U, j.ID_J, '2026-09-03 18:45:00', 180
+SELECT u.ID_U, j.ID_J, '2026-09-03 18:45:00', 100
 FROM USUARIO u
 CROSS JOIN JUEGO j
 WHERE u.Nombre_Usuario = 'Brahian'
-AND j.Nombre = 'Memoria';
+AND j.Nombre = 'Laberinto Infinito'
+AND NOT EXISTS (
+    SELECT 1 FROM JUE_PAR jp
+    WHERE jp.ID_U = u.ID_U AND jp.ID_J = j.ID_J
+    AND jp.Fecha = '2026-09-03 18:45:00'
+);
 
 INSERT INTO JUE_PAR (ID_U, ID_J, Fecha, Puntos)
-SELECT u.ID_U, j.ID_J, '2026-09-04 20:15:00', 250
+SELECT u.ID_U, j.ID_J, '2026-09-04 20:15:00', 0
 FROM USUARIO u
 CROSS JOIN JUEGO j
 WHERE u.Nombre_Usuario = 'Tadeo'
-AND j.Nombre = 'Trivia Gamer';
+AND j.Nombre = 'Juego de Sumas'
+AND NOT EXISTS (
+    SELECT 1 FROM JUE_PAR jp
+    WHERE jp.ID_U = u.ID_U AND jp.ID_J = j.ID_J
+    AND jp.Fecha = '2026-09-04 20:15:00'
+);
 -- =====================================================
 -- ACCIONES ADMINISTRATIVAS SOBRE USUARIOS
 -- =====================================================
