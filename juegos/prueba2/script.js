@@ -90,7 +90,11 @@ function elegirCamino(eleccion) {
 
 // Guarda una única fila con el puntaje final de la partida.
 function guardarPuntajeFinal() {
-    window.StardustPuntajes.guardar(puntos)
+    window.StardustPuntajes.obtenerPuntajeMaximo()
+        .then(puntajeMaximo => {
+            const puntajeFinal = puntos > 0 ? puntajeMaximo : 0;
+            return window.StardustPuntajes.guardar(puntajeFinal);
+        })
         .then(() => {
             mensajeElemento.textContent += " Puntaje guardado.";
         })

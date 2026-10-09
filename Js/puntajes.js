@@ -6,14 +6,47 @@
     }
 
     const endpoint = new URL("../juegos/guardarPuntaje.php", script.src).href;
+    let solicitudPuntajeMaximo;
 
-    async function guardar(puntos) {
+    function obtenerIdJuego() {
         const idJuego = new URLSearchParams(global.location.search).get("id_juego");
-        const puntaje = Number(puntos);
-
         if (!idJuego || !Number.isInteger(Number(idJuego)) || Number(idJuego) <= 0) {
             throw new Error("No se recibio un identificador de juego valido.");
         }
+        return idJuego;
+    }
+
+    async function obtenerPuntajeMaximo() {
+        if (!solicitudPuntajeMaximo) {
+            const url = new URL(endpoint);
+            url.searchParams.set("id_juego", obtenerIdJuego());
+            solicitudPuntajeMaximo = fetch(url, {
+                credentials: "same-origin",
+                cache: "no-store"
+            }).then(async respuesta => {
+                let resultado;
+                try {
+                    resultado = await respuesta.json();
+                } catch (error) {
+                    throw new Error("El servidor devolvio una respuesta no valida.");
+                }
+                if (!respuesta.ok || resultado.status !== "success") {
+                    throw new Error(resultado.mensaje || "No se pudo consultar el puntaje maximo.");
+                }
+                const puntajeMaximo = Number(resultado.puntaje_maximo);
+                if (!Number.isInteger(puntajeMaximo) || puntajeMaximo < 0) {
+                    throw new Error("El servidor devolvio un puntaje maximo no valido.");
+                }
+                return puntajeMaximo;
+            });
+        }
+        return solicitudPuntajeMaximo;
+    }
+
+    async function guardar(puntos) {
+        const idJuego = obtenerIdJuego();
+        const puntaje = Number(puntos);
+
         if (!Number.isInteger(puntaje)) {
             throw new Error("El puntaje debe ser un numero entero.");
         }
@@ -45,5 +78,5 @@
         return resultado;
     }
 
-    global.StardustPuntajes = Object.freeze({ guardar });
+    global.StardustPuntajes = Object.freeze({ guardar, obtenerPuntajeMaximo });
 })(window);

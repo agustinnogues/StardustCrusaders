@@ -1,6 +1,6 @@
 let valor1 = 0;
 let valor2 = 0;
-const puntosGanados = 10; // Puntos fijos al acertar
+let puntosGanados = null;
 let guardandoPuntaje = false;
 
 function generarSuma() {
@@ -13,9 +13,13 @@ function generarSuma() {
     document.getElementById("respuestaUsuario").focus();
 }
 
-function verificarRespuesta() {
+async function verificarRespuesta() {
     const respuestaInput = document.getElementById("respuestaUsuario").value;
     const mensaje = document.getElementById("mensaje");
+
+    if (puntosGanados === null) {
+        return;
+    }
 
     if (respuestaInput === "") {
         mensaje.textContent = "Por favor ingresa un número.";
@@ -39,6 +43,7 @@ function verificarRespuesta() {
 }
 
 function guardarPuntaje(puntos) {
+    const mensaje = document.getElementById("mensaje");
     if (guardandoPuntaje) {
         return;
     }
@@ -67,5 +72,24 @@ document.getElementById("respuestaUsuario").addEventListener("keypress", functio
     }
 });
 
+async function iniciarJuego() {
+    const entrada = document.getElementById("respuestaUsuario");
+    const boton = document.getElementById("comprobar");
+    entrada.disabled = true;
+    boton.disabled = true;
+
+    try {
+        puntosGanados = await window.StardustPuntajes.obtenerPuntajeMaximo();
+        document.getElementById("puntosPorRespuesta").textContent = puntosGanados;
+        generarSuma();
+        entrada.disabled = false;
+        boton.disabled = false;
+    } catch (error) {
+        const mensaje = document.getElementById("mensaje");
+        mensaje.textContent = `No se pudo cargar el máximo de puntos: ${error.message}`;
+        mensaje.style.color = "red";
+    }
+}
+
 // Iniciar juego al cargar la página
-generarSuma();
+iniciarJuego();

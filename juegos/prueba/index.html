@@ -15,14 +15,14 @@
 
     <div class="tarjeta-juego">
         <h2>➕ Juego de Sumas Rápido</h2>
-        <p>Resuelve la siguiente operación para ganar <strong>10 puntos</strong>:</p>
+        <p>Resuelve la siguiente operación para ganar <strong id="puntosPorRespuesta">...</strong> puntos:</p>
         
         <div style="font-size: 24px; margin: 20px 0;">
             <span id="num1">0</span> + <span id="num2">0</span> = 
             <input type="number" id="respuestaUsuario" autofocus>
         </div>
         
-        <button onclick="verificarRespuesta()">Comprobar</button>
+        <button id="comprobar" onclick="verificarRespuesta()">Comprobar</button>
         <div id="mensaje"></div>
 
         <div style="margin-top: 20px;">

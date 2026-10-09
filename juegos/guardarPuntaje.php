@@ -10,6 +10,27 @@ function responderError($mensaje, $codigo) {
     exit();
 }
 
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
+    $idJuego = filter_input(INPUT_GET, "id_juego", FILTER_VALIDATE_INT);
+    if ($idJuego === false || $idJuego === null || $idJuego <= 0) {
+        responderError("El identificador del juego debe ser un entero válido", 400);
+    }
+
+    try {
+        $puntajeMaximo = conversorPuntajes::obtenerPuntajeMaximo($idJuego);
+    } catch (Exception $e) {
+        error_log("No se pudo consultar el puntaje máximo del juego: " . $e->getMessage());
+        responderError("No se pudo consultar el puntaje máximo", 500);
+    }
+
+    if ($puntajeMaximo === null) {
+        responderError("No se encontró el juego solicitado", 404);
+    }
+
+    echo json_encode(["status" => "success", "puntaje_maximo" => $puntajeMaximo]);
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     responderError("Método no permitido", 405);
 }
@@ -31,7 +52,10 @@ $resultado = conversorPuntajes::guardarPartida(
     $puntos
 );
 
-if (!$resultado) {
+if ($resultado === null) {
+    responderError("El juego no existe o el puntaje supera el máximo permitido", 400);
+}
+if ($resultado === false) {
     responderError("No se pudo guardar en la base de datos", 500);
 }
 

@@ -48,8 +48,9 @@ const expresionLetra = /^[a-záéíóúüñ]$/i;
 let palabraSecreta = "";
 let letrasAdivinadas = new Set();
 let errores = 0;
-let partidaActiva = true;
+let partidaActiva = false;
 let numeroPartida = 0;
+let puntajeMaximo = null;
 
 function normalizarLetra(letra) {
     return letra.toLocaleLowerCase("es");
@@ -132,7 +133,7 @@ async function guardarPuntaje(puntos, partida) {
 
 function terminarPartida(gano) {
     partidaActiva = false;
-    const puntos = gano ? 100 : 0;
+    const puntos = gano ? puntajeMaximo : 0;
     mensajeElemento.className = gano ? "mensaje ganaste" : "mensaje perdiste";
     mensajeElemento.textContent = gano
         ? `¡Muy bien! Adivinaste: ${palabraSecreta}. Ganaste ${puntos} puntos. Guardando...`
@@ -185,6 +186,9 @@ function probarLetra(valor) {
 }
 
 function iniciarJuego() {
+    if (puntajeMaximo === null) {
+        return;
+    }
     numeroPartida += 1;
     const palabras = categorias[categoriaSelect.value];
     palabraSecreta = palabras[Math.floor(Math.random() * palabras.length)];
@@ -207,4 +211,14 @@ botonNuevoJuego.addEventListener("click", iniciarJuego);
 categoriaSelect.addEventListener("change", iniciarJuego);
 
 construirTeclado();
-iniciarJuego();
+window.StardustPuntajes.obtenerPuntajeMaximo()
+    .then(maximo => {
+        puntajeMaximo = maximo;
+        document.getElementById("notaPuntaje").textContent =
+            `Adivinar la palabra otorga ${puntajeMaximo} puntos. Si se completa el dibujo, la partida vale 0 puntos.`;
+        iniciarJuego();
+    })
+    .catch(error => {
+        mensajeElemento.className = "mensaje error";
+        mensajeElemento.textContent = `No se pudo cargar el máximo de puntos: ${error.message}`;
+    });

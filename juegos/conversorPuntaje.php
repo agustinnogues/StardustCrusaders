@@ -4,10 +4,27 @@ require_once __DIR__ . '/../Basededatos/Conexion.php';
 // Guarda partidas en la base de datos y consulta los puntajes de un usuario.
 class conversorPuntajes {
 
+    public static function obtenerPuntajeMaximo($id_juego) {
+        $pdo = Conexion::conectar();
+        $stmt = $pdo->prepare("SELECT Puntos_Maximos FROM JUEGO WHERE ID_J = :id_j");
+        $stmt->execute(['id_j' => $id_juego]);
+        $puntajeMaximo = $stmt->fetchColumn();
+
+        return $puntajeMaximo === false ? null : (int)$puntajeMaximo;
+    }
+
     // Método para guardar una nueva partida
     public static function guardarPartida($id_usuario, $id_juego, $puntos) {
         try {
             $pdo = Conexion::conectar();
+            $stmt = $pdo->prepare("SELECT Puntos_Maximos FROM JUEGO WHERE ID_J = :id_j");
+            $stmt->execute(['id_j' => $id_juego]);
+            $puntajeMaximo = $stmt->fetchColumn();
+
+            if ($puntajeMaximo === false || $puntos > (int)$puntajeMaximo) {
+                return null;
+            }
+
             $sql = "INSERT INTO JUE_PAR (ID_U, ID_J, Fecha, Puntos) VALUES (:id_u, :id_j, NOW(), :puntos)";
             $stmt = $pdo->prepare($sql);
             return $stmt->execute([
