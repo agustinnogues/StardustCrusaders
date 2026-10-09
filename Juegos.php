@@ -50,7 +50,7 @@ try {
                         <?= htmlspecialchars($juego['Nombre']) ?>
                     </h3>
                     <a
-                        href="juegos/<?= htmlspecialchars($juego['Carpeta']) ?>/index.html"
+                        href="juegos/<?= htmlspecialchars($juego['Carpeta']) ?>/index.html?id_juego=<?= (int)$juego['ID_J'] ?>"
                         class="botonJuego"
                     >
                         Jugar

@@ -138,6 +138,18 @@ AND NOT EXISTS (
 -- =====================================================
 -- JUEGOS
 -- =====================================================
+INSERT INTO JUEGO (Nombre, Carpeta, Descripcion, Puntos_Maximos)
+SELECT
+    'Ahorcado',
+    'Ahorcado',
+    'Adivina la palabra antes de completar el ahorcado.',
+    100
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM JUEGO
+    WHERE Nombre = 'Ahorcado'
+);
+
 INSERT INTO JUEGO (Nombre, Descripcion, Puntos_Maximos)
 SELECT
     'Adivina la Bandera',
